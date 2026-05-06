@@ -1,0 +1,647 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Admin — Barberia Aveiro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #faf8f5; --cream-dark: #f0ebe3; --cream-darker: #e5ddd3;
+      --dark: #1a1a1a; --dark2: #2d2d2d; --gray: #6b6b6b; --gray-light: #9b9b9b;
+      --white: #ffffff; --gold: #c9a84c; --green: #16a34a; --red: #dc2626;
+      --border: rgba(0,0,0,0.08); --border-dark: rgba(0,0,0,0.14); --radius: 8px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--cream-dark); color: var(--dark); min-height: 100vh; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── LOGIN OVERLAY ── */
+    #loginOverlay {
+      position: fixed; inset: 0; background: var(--dark);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; padding: 24px;
+    }
+    .login-box {
+      background: var(--cream); border-radius: 12px;
+      padding: 40px 32px; width: 100%; max-width: 360px; text-align: center;
+    }
+    .login-logo {
+      font-family: 'Playfair Display', serif; font-size: 22px;
+      color: var(--dark); margin-bottom: 4px;
+    }
+    .login-logo span { color: var(--gold); }
+    .login-sub { font-size: 12px; color: var(--gray); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 28px; }
+    .login-label { font-size: 12px; font-weight: 600; color: var(--gray); text-align: left; margin-bottom: 6px; letter-spacing: 0.5px; }
+    .login-input {
+      width: 100%; border: 1px solid var(--border-dark); border-radius: var(--radius);
+      padding: 12px 14px; font-size: 15px; font-family: 'Inter', sans-serif;
+      background: var(--white); color: var(--dark); outline: none;
+      transition: border-color 0.2s; margin-bottom: 16px;
+    }
+    .login-input:focus { border-color: var(--dark); }
+    .login-btn {
+      width: 100%; background: var(--dark); color: #fff; border: none;
+      border-radius: var(--radius); padding: 13px; font-size: 14px;
+      font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer;
+      letter-spacing: 0.5px; transition: background 0.2s;
+    }
+    .login-btn:hover { background: var(--dark2); }
+    .login-error { font-size: 12px; color: var(--red); margin-top: 10px; display: none; }
+
+    /* ── HEADER ── */
+    .admin-header {
+      background: var(--dark); padding: 0 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 54px; position: sticky; top: 0; z-index: 100;
+    }
+    .header-logo { font-family: 'Playfair Display', serif; font-size: 17px; color: #fff; }
+    .header-logo span { color: var(--gold); }
+    .header-biz { font-size: 12px; color: rgba(255,255,255,0.4); }
+    .logout-btn {
+      background: none; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px;
+      color: rgba(255,255,255,0.5); font-size: 12px; font-family: 'Inter', sans-serif;
+      padding: 6px 12px; cursor: pointer; transition: all 0.2s;
+    }
+    .logout-btn:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+
+    /* ── MAIN ── */
+    .admin-main { max-width: 640px; margin: 0 auto; padding: 20px 16px 60px; }
+
+    /* ── DATE BANNER ── */
+    .date-banner {
+      background: var(--white); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 16px 18px; margin-bottom: 16px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .date-today { font-size: 13px; color: var(--gray); }
+    .date-today strong { font-size: 17px; color: var(--dark); font-weight: 700; display: block; margin-bottom: 1px; }
+    .citas-badge {
+      background: var(--dark); color: #fff; border-radius: 6px;
+      padding: 6px 12px; font-size: 12px; font-weight: 600; text-align: center;
+      min-width: 80px;
+    }
+    .citas-badge span { font-size: 22px; font-weight: 700; display: block; line-height: 1; color: var(--gold); }
+
+    /* ── QUICK CLOSE ── */
+    .quick-close-btn {
+      width: 100%; background: var(--red); color: #fff; border: none;
+      border-radius: var(--radius); padding: 13px; font-size: 14px;
+      font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer;
+      margin-bottom: 16px; letter-spacing: 0.3px; transition: background 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .quick-close-btn:hover { background: #b91c1c; }
+
+    /* ── TODAY'S BOOKINGS ── */
+    .section-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: var(--radius);
+      margin-bottom: 16px; overflow: hidden;
+    }
+    .section-header {
+      padding: 14px 18px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .section-title { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray); }
+    .section-action { font-size: 12px; color: var(--gold); font-weight: 600; cursor: pointer; }
+
+    .booking-list { padding: 0; }
+    .booking-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 12px 18px; border-bottom: 1px solid var(--border);
+    }
+    .booking-item:last-child { border-bottom: none; }
+    .booking-time {
+      font-size: 15px; font-weight: 700; color: var(--dark);
+      min-width: 46px; flex-shrink: 0;
+    }
+    .booking-time.past { color: var(--gray-light); }
+    .booking-info { flex: 1; }
+    .booking-name { font-size: 14px; font-weight: 600; color: var(--dark); }
+    .booking-detail { font-size: 12px; color: var(--gray); margin-top: 1px; }
+    .booking-barber {
+      font-size: 11px; background: var(--cream-dark); color: var(--gray);
+      border-radius: 20px; padding: 3px 10px; flex-shrink: 0;
+    }
+    .empty-state {
+      padding: 28px 18px; text-align: center;
+      font-size: 13px; color: var(--gray-light);
+    }
+
+    /* ── TABS ── */
+    .tabs-bar {
+      display: flex; background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); margin-bottom: 16px; overflow: hidden;
+    }
+    .tab-btn {
+      flex: 1; padding: 12px 8px; font-size: 13px; font-weight: 500;
+      color: var(--gray); background: none; border: none; cursor: pointer;
+      font-family: 'Inter', sans-serif; transition: all 0.15s;
+      border-right: 1px solid var(--border);
+    }
+    .tab-btn:last-child { border-right: none; }
+    .tab-btn.active { background: var(--dark); color: #fff; font-weight: 600; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── FORMS ── */
+    .form-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px 18px;
+    }
+    .form-row { margin-bottom: 16px; }
+    .form-label {
+      font-size: 12px; font-weight: 600; color: var(--gray);
+      letter-spacing: 0.5px; margin-bottom: 6px; display: block;
+    }
+    .form-input, .form-select {
+      width: 100%; border: 1px solid var(--border-dark); border-radius: var(--radius);
+      padding: 11px 14px; font-size: 14px; font-family: 'Inter', sans-serif;
+      background: var(--white); color: var(--dark); outline: none;
+      transition: border-color 0.2s; appearance: none;
+    }
+    .form-input:focus, .form-select:focus { border-color: var(--dark); }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-note { font-size: 12px; color: var(--gray); margin-top: 6px; }
+    .submit-btn {
+      width: 100%; background: var(--dark); color: #fff; border: none;
+      border-radius: var(--radius); padding: 13px; font-size: 14px;
+      font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer;
+      letter-spacing: 0.3px; transition: background 0.2s; margin-top: 4px;
+    }
+    .submit-btn:hover { background: var(--dark2); }
+    .submit-btn:disabled { background: var(--cream-darker); color: var(--gray-light); cursor: not-allowed; }
+
+    /* ── ACTIVE BLOCKS LIST ── */
+    .block-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 18px; border-bottom: 1px solid var(--border);
+    }
+    .block-item:last-child { border-bottom: none; }
+    .block-type-badge {
+      font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 4px; flex-shrink: 0; margin-top: 2px;
+    }
+    .block-type-badge.dia { background: #fee2e2; color: var(--red); }
+    .block-type-badge.horas { background: #fef3c7; color: #92400e; }
+    .block-info { flex: 1; }
+    .block-fecha { font-size: 14px; font-weight: 600; color: var(--dark); }
+    .block-detail { font-size: 12px; color: var(--gray); margin-top: 2px; }
+    .block-delete {
+      background: none; border: 1px solid var(--border-dark); border-radius: 6px;
+      color: var(--red); font-size: 12px; padding: 5px 10px; cursor: pointer;
+      font-family: 'Inter', sans-serif; transition: all 0.15s; flex-shrink: 0;
+    }
+    .block-delete:hover { background: #fee2e2; border-color: var(--red); }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--dark); color: #fff; border-radius: 8px;
+      padding: 12px 20px; font-size: 13px; font-weight: 500;
+      opacity: 0; transition: all 0.3s; pointer-events: none; white-space: nowrap;
+      z-index: 500;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #toast.error { background: var(--red); }
+
+    /* ── FOOTER ── */
+    .admin-footer {
+      text-align: center; font-size: 11px; color: var(--gray-light);
+      padding: 16px; margin-top: 8px;
+    }
+    .admin-footer span { color: var(--gold); font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN OVERLAY -->
+<div id="loginOverlay">
+  <div class="login-box">
+    <div class="login-logo">Hora<span>ia</span></div>
+    <div class="login-sub">Panel de administración</div>
+    <div class="login-label">Contraseña</div>
+    <input id="loginInput" type="password" class="login-input" placeholder="••••••••" />
+    <button class="login-btn" onclick="doLogin()">Entrar</button>
+    <div class="login-error" id="loginError">Contraseña incorrecta</div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="admin-header">
+  <div>
+    <div class="header-logo">Hora<span>ia</span></div>
+  </div>
+  <div class="header-biz" id="headerBiz">Barberia Aveiro</div>
+  <button class="logout-btn" onclick="doLogout()">Salir</button>
+</header>
+
+<!-- MAIN -->
+<main class="admin-main" id="adminMain" style="display:none">
+
+  <!-- DATE BANNER -->
+  <div class="date-banner">
+    <div class="date-today">
+      <strong id="todayLabel">—</strong>
+      <span id="todayStatus"></span>
+    </div>
+    <div class="citas-badge">
+      <span id="citasCount">—</span>
+      citas hoy
+    </div>
+  </div>
+
+  <!-- QUICK CLOSE TODAY -->
+  <button class="quick-close-btn" id="quickCloseBtn" onclick="closeToday()">
+    🔒 Cerrar el negocio hoy
+  </button>
+
+  <!-- TODAY'S BOOKINGS -->
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-title">Citas de hoy</span>
+      <span class="section-action" onclick="loadTodayBookings()">↻ Actualizar</span>
+    </div>
+    <div class="booking-list" id="bookingList">
+      <div class="empty-state">Cargando citas...</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs-bar">
+    <button class="tab-btn active" onclick="switchTab('cerrarDia')">Cerrar día</button>
+    <button class="tab-btn" onclick="switchTab('bloquearHoras')">Bloquear horas</button>
+    <button class="tab-btn" onclick="switchTab('activos')">Activos</button>
+  </div>
+
+  <!-- TAB: CERRAR DÍA -->
+  <div class="tab-panel active" id="tab-cerrarDia">
+    <div class="form-card">
+      <div class="form-row">
+        <label class="form-label">Día a cerrar</label>
+        <input type="date" class="form-input" id="closeDayDate" />
+      </div>
+      <div class="form-row">
+        <label class="form-label">Empleado afectado</label>
+        <select class="form-select" id="closeDayEmp">
+          <option value="0">Todos los empleados</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Motivo (opcional)</label>
+        <input type="text" class="form-input" id="closeDayNota" placeholder="Ej: Festivo, Vacaciones..." />
+      </div>
+      <button class="submit-btn" onclick="submitBlockDay()">Cerrar este día</button>
+    </div>
+  </div>
+
+  <!-- TAB: BLOQUEAR HORAS -->
+  <div class="tab-panel" id="tab-bloquearHoras">
+    <div class="form-card">
+      <div class="form-row">
+        <label class="form-label">Día</label>
+        <input type="date" class="form-input" id="blockHoursDate" />
+      </div>
+      <div class="form-row form-row-2">
+        <div>
+          <label class="form-label">Desde</label>
+          <input type="time" class="form-input" id="blockHoursStart" step="1800" />
+        </div>
+        <div>
+          <label class="form-label">Hasta</label>
+          <input type="time" class="form-input" id="blockHoursEnd" step="1800" />
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Empleado afectado</label>
+        <select class="form-select" id="blockHoursEmp">
+          <option value="0">Todos los empleados</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Motivo (opcional)</label>
+        <input type="text" class="form-input" id="blockHoursNota" placeholder="Ej: Formación, Cita privada..." />
+      </div>
+      <p class="form-note">Se bloquearán todos los slots de 30 min entre las horas indicadas.</p>
+      <button class="submit-btn" onclick="submitBlockHours()">Bloquear estas horas</button>
+    </div>
+  </div>
+
+  <!-- TAB: ACTIVOS -->
+  <div class="tab-panel" id="tab-activos">
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-title">Bloqueos activos</span>
+        <span class="section-action" onclick="renderActiveBlocks()">↻ Actualizar</span>
+      </div>
+      <div id="activeBlocksList">
+        <div class="empty-state">Sin bloqueos activos.</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div class="admin-footer">Panel gestionado por <span>Horaia</span></div>
+
+<div id="toast"></div>
+
+<script>
+  /* ================================================================
+     CONFIGURACIÓN — CAMBIAR POR CLIENTE
+     ================================================================ */
+  const ADMIN_PASSWORD   = 'admin1234';          // ← cambiar
+  const NEGOCIO_NOMBRE   = 'Barberia Aveiro';    // ← cambiar
+  const N8N_ADMIN_GET    = 'https://n8n-n8n.zouxyy.easypanel.host/webhook/85644a93-3bf3-4258-b1a6-50ea52a40d8f';
+  const N8N_ADMIN_POST   = 'https://n8n-n8n.zouxyy.easypanel.host/webhook/bf382f5b-f8f5-4df4-b98d-669d4fddb362';
+  const N8N_BOOKINGS_GET = 'https://n8n-n8n.zouxyy.easypanel.host/webhook/85644a93-3bf3-4258-b1a6-50ea52a40d8f';
+
+  const EMPLOYEES = [
+    { id: 1, name: 'Nestor' },
+    { id: 2, name: 'Sebastián' },
+    { id: 3, name: 'Alfonso' },
+  ];
+  /* ================================================================ */
+
+  const MONTH_NAMES   = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const DAY_NAMES     = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const STORAGE_KEY   = `rl_admin_blocks_${NEGOCIO_NOMBRE.replace(/\s/g,'_')}`;
+
+  function todayKey() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+
+  function formatDateLabel(dk) {
+    const [y,m,d] = dk.split('-').map(Number);
+    const date = new Date(y, m-1, d);
+    return `${DAY_NAMES[date.getDay()]} ${d} de ${MONTH_NAMES[m-1]}`;
+  }
+
+  /* ── AUTH ── */
+  function doLogin() {
+    const val = document.getElementById('loginInput').value;
+    if (val === ADMIN_PASSWORD) {
+      sessionStorage.setItem('rl_admin_ok','1');
+      document.getElementById('loginOverlay').style.display = 'none';
+      document.getElementById('adminMain').style.display = '';
+      document.getElementById('headerBiz').textContent = NEGOCIO_NOMBRE;
+      initAdmin();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+      document.getElementById('loginInput').value = '';
+    }
+  }
+
+  function doLogout() {
+    sessionStorage.removeItem('rl_admin_ok');
+    location.reload();
+  }
+
+  document.getElementById('loginInput').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+  if (sessionStorage.getItem('rl_admin_ok') === '1') {
+    document.getElementById('loginOverlay').style.display = 'none';
+    document.getElementById('adminMain').style.display = '';
+    document.getElementById('headerBiz').textContent = NEGOCIO_NOMBRE;
+    initAdmin();
+  }
+
+  /* ── INIT ── */
+  function initAdmin() {
+    const today = todayKey();
+    const todayDate = new Date();
+    document.getElementById('todayLabel').textContent =
+      `${DAY_NAMES[todayDate.getDay()]}, ${todayDate.getDate()} de ${MONTH_NAMES[todayDate.getMonth()]}`;
+
+    // Set default dates
+    document.getElementById('closeDayDate').value     = today;
+    document.getElementById('blockHoursDate').value   = today;
+    document.getElementById('blockHoursStart').value  = '09:30';
+    document.getElementById('blockHoursEnd').value    = '11:00';
+
+    // Populate employee selects
+    const empOptions = EMPLOYEES.map(e => `<option value="${e.id}">${e.name}</option>`).join('');
+    document.getElementById('closeDayEmp').innerHTML   += empOptions;
+    document.getElementById('blockHoursEmp').innerHTML += empOptions;
+
+    loadTodayBookings();
+    renderActiveBlocks();
+    checkTodayClosed();
+  }
+
+  /* ── TABS ── */
+  function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+      btn.classList.toggle('active', ['cerrarDia','bloquearHoras','activos'][i] === name);
+    });
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(`tab-${name}`).classList.add('active');
+    if (name === 'activos') renderActiveBlocks();
+  }
+
+  /* ── LOCAL STORAGE ── */
+  function getBlocks() {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  }
+
+  function saveBlocks(blocks) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(blocks));
+  }
+
+  function addBlock(block) {
+    block.id = Date.now().toString();
+    const blocks = getBlocks();
+    blocks.push(block);
+    saveBlocks(blocks);
+  }
+
+  function removeBlock(id) {
+    saveBlocks(getBlocks().filter(b => b.id !== id));
+  }
+
+  /* ── TODAY'S BOOKINGS ── */
+  async function loadTodayBookings() {
+    const list = document.getElementById('bookingList');
+    list.innerHTML = '<div class="empty-state">Cargando...</div>';
+    const today = todayKey();
+    let bookings = [];
+
+    // Consultar horas ocupadas por cada empleado vía n8n GET
+    try {
+      await Promise.all(EMPLOYEES.map(async emp => {
+        const res = await fetch(`${N8N_BOOKINGS_GET}?barbero=${encodeURIComponent(emp.name)}&fecha=${today}`);
+        if (res.ok) {
+          const data = await res.json();
+          const horas = Array.isArray(data) ? data : (data.horasOcupadas || []);
+          horas.forEach(hora => bookings.push({ hora, empleado: emp.name, nombre: '—', servicio: '—' }));
+        }
+      }));
+    } catch (_) {}
+
+    // Fallback: leer desde localStorage (clave usada en script.js)
+    if (!bookings.length) {
+      EMPLOYEES.forEach(emp => {
+        const booked = JSON.parse(localStorage.getItem(`aveiro_${emp.id}_${today}`) || '[]');
+        booked.forEach(hora => bookings.push({ hora, empleado: emp.name, nombre: '—', servicio: '—' }));
+      });
+    }
+
+    bookings.sort((a, b) => a.hora.localeCompare(b.hora));
+    document.getElementById('citasCount').textContent = bookings.length;
+
+    if (!bookings.length) {
+      list.innerHTML = '<div class="empty-state">Sin citas para hoy.</div>';
+      return;
+    }
+
+    const now = new Date();
+    list.innerHTML = bookings.map(b => {
+      const [h, m] = b.hora.split(':').map(Number);
+      const past = h < now.getHours() || (h === now.getHours() && m < now.getMinutes());
+      return `<div class="booking-item">
+        <div class="booking-time ${past ? 'past' : ''}">${b.hora}</div>
+        <div class="booking-info">
+          <div class="booking-name">${b.nombre || '—'}</div>
+          <div class="booking-detail">${b.servicio || '—'}</div>
+        </div>
+        <div class="booking-barber">${b.empleado || '—'}</div>
+      </div>`;
+    }).join('');
+  }
+
+  /* ── CERRAR HOY (quick) ── */
+  function checkTodayClosed() {
+    const today = todayKey();
+    const isClosed = getBlocks().some(b => b.fecha === today && b.tipo === 'dia_completo');
+    const btn = document.getElementById('quickCloseBtn');
+    if (isClosed) {
+      btn.textContent = '✓ El negocio está cerrado hoy — Reabrir';
+      btn.style.background = 'var(--green)';
+    } else {
+      btn.innerHTML = '🔒 Cerrar el negocio hoy';
+      btn.style.background = '';
+    }
+  }
+
+  function closeToday() {
+    const today = todayKey();
+    const blocks = getBlocks();
+    const existing = blocks.find(b => b.fecha === today && b.tipo === 'dia_completo');
+
+    if (existing) {
+      removeBlock(existing.id);
+      showToast('Negocio reabierto para hoy');
+    } else {
+      const block = { tipo: 'dia_completo', fecha: today, empleadoId: 0, nota: 'Cerrado' };
+      addBlock(block);
+      postBlock({ ...block, accion: 'bloquear' });
+      showToast('Negocio cerrado para hoy');
+    }
+    checkTodayClosed();
+    renderActiveBlocks();
+  }
+
+  /* ── BLOCK DAY ── */
+  function submitBlockDay() {
+    const fecha = document.getElementById('closeDayDate').value;
+    const empId = parseInt(document.getElementById('closeDayEmp').value);
+    const nota  = document.getElementById('closeDayNota').value.trim();
+
+    if (!fecha) { showToast('Selecciona un día', true); return; }
+
+    const block = { tipo: 'dia_completo', fecha, empleadoId: empId, nota };
+    addBlock(block);
+    postBlock({ ...block, accion: 'bloquear' });
+    showToast('Día bloqueado correctamente');
+    checkTodayClosed();
+    renderActiveBlocks();
+    document.getElementById('closeDayNota').value = '';
+  }
+
+  /* ── BLOCK HOURS ── */
+  function submitBlockHours() {
+    const fecha = document.getElementById('blockHoursDate').value;
+    const inicio = document.getElementById('blockHoursStart').value;
+    const fin    = document.getElementById('blockHoursEnd').value;
+    const empId  = parseInt(document.getElementById('blockHoursEmp').value);
+    const nota   = document.getElementById('blockHoursNota').value.trim();
+
+    if (!fecha)         { showToast('Selecciona un día', true); return; }
+    if (!inicio || !fin){ showToast('Indica la hora de inicio y fin', true); return; }
+    if (inicio >= fin)  { showToast('La hora de fin debe ser mayor que la de inicio', true); return; }
+
+    const block = { tipo: 'horas', fecha, inicio, fin, empleadoId: empId, nota };
+    addBlock(block);
+    postBlock({ ...block, accion: 'bloquear' });
+    showToast('Horas bloqueadas correctamente');
+    renderActiveBlocks();
+    document.getElementById('blockHoursNota').value = '';
+  }
+
+  /* ── RENDER ACTIVE BLOCKS ── */
+  function renderActiveBlocks() {
+    const container = document.getElementById('activeBlocksList');
+    const today = todayKey();
+    const blocks = getBlocks()
+      .filter(b => b.fecha >= today)
+      .sort((a, b) => a.fecha.localeCompare(b.fecha));
+
+    if (!blocks.length) {
+      container.innerHTML = '<div class="empty-state">Sin bloqueos activos.</div>';
+      return;
+    }
+
+    container.innerHTML = blocks.map(b => {
+      const empName = b.empleadoId === 0 ? 'Todos' : (EMPLOYEES.find(e => e.id === b.empleadoId)?.name || '—');
+      const detail  = b.tipo === 'dia_completo'
+        ? `Todo el día · ${empName}${b.nota ? ' · ' + b.nota : ''}`
+        : `${b.inicio}–${b.fin} · ${empName}${b.nota ? ' · ' + b.nota : ''}`;
+      return `<div class="block-item">
+        <span class="block-type-badge ${b.tipo === 'dia_completo' ? 'dia' : 'horas'}">
+          ${b.tipo === 'dia_completo' ? 'Día' : 'Horas'}
+        </span>
+        <div class="block-info">
+          <div class="block-fecha">${formatDateLabel(b.fecha)}</div>
+          <div class="block-detail">${detail}</div>
+        </div>
+        <button class="block-delete" onclick="deleteBlock('${b.id}')">Eliminar</button>
+      </div>`;
+    }).join('');
+  }
+
+  function deleteBlock(id) {
+    removeBlock(id);
+    postBlock({ accion: 'desbloquear', id });
+    showToast('Bloqueo eliminado');
+    renderActiveBlocks();
+    checkTodayClosed();
+  }
+
+  /* ── POST TO N8N ── */
+  async function postBlock(data) {
+    try {
+      await fetch(N8N_ADMIN_POST, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+    } catch (_) {}
+  }
+
+  /* ── TOAST ── */
+  let toastTimer;
+  function showToast(msg, isError = false) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'show' + (isError ? ' error' : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { el.className = ''; }, 2800);
+  }
+</script>
+</body>
+</html>
+
+
