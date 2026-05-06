@@ -218,17 +218,17 @@
 
     .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
 
-    .feature-card {
-      background: var(--white); padding: 36px 28px;
-      transition: background 0.2s;
-    }
-
+    .feature-card { background: var(--white); padding: 40px 32px; transition: background 0.2s; }
     .feature-card:hover { background: var(--cream); }
 
-    .feature-icon { font-size: 28px; margin-bottom: 16px; }
+    .feature-icon {
+      width: 44px; height: 44px; margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .feature-icon svg { width: 28px; height: 28px; stroke: var(--dark); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 
-    .feature-card h3 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; margin-bottom: 8px; color: var(--dark); }
-    .feature-card p { font-size: 14px; color: var(--gray); line-height: 1.7; }
+    .feature-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 10px; color: var(--dark); letter-spacing: -0.2px; font-family: 'Inter', sans-serif; }
+    .feature-card p { font-size: 14px; color: var(--gray); line-height: 1.75; }
 
     /* ===== PRICING ===== */
     .pricing {
@@ -517,32 +517,44 @@
     <h2 class="section-title" style="margin-bottom:48px">Lo que obtienes con <span>Horaia</span></h2>
     <div class="features-grid">
       <div class="feature-card">
-        <div class="feature-icon">🌐</div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
         <h3>Web profesional</h3>
-        <p>P&aacute;gina completa con tus servicios, precios, equipo, galeria de fotos y contacto. Con tu dominio incluido.</p>
+        <p>P&aacute;gina completa con tus servicios, precios, equipo, galer&iacute;a y contacto. Con tu dominio incluido.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">📅</div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        </div>
         <h3>Reservas 24/7</h3>
         <p>Tus clientes reservan cuando quieren, aunque est&eacute;s durmiendo. Sin llamadas, sin WhatsApps manuales.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">💬</div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
         <h3>Confirmaciones autom&aacute;ticas</h3>
-        <p>El cliente ve su cita confirmada al instante. Con el plus de recordatorios, recibirá aviso 24h antes.</p>
+        <p>El cliente ve su cita confirmada al instante. Con recordatorios, recibe aviso 24h antes.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">📊</div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
         <h3>Panel de gesti&oacute;n</h3>
         <p>Ve todas tus citas del d&iacute;a, cancela, bloquea horas y gestiona tu agenda desde el m&oacute;vil.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">🔗</div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </div>
         <h3>Enlace directo</h3>
         <p>Una URL limpia que compartes en Instagram, Google o WhatsApp. Tus clientes reservan en 3 clics.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">0%</div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
         <h3>Sin comisi&oacute;n por reserva</h3>
         <p>Precio fijo al mes, hagas 10 o 500 reservas. Sin sorpresas, sin porcentajes, sin letra peque&ntilde;a.</p>
       </div>
