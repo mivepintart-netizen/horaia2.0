@@ -1,0 +1,107 @@
+{
+  "name": "ReservaLocal – GET Disponibilidad",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "REEMPLAZA_CON_TU_PATH_GET",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-0001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "reservalocal-get-001"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "documentId": {
+          "__rl": true,
+          "value": "REEMPLAZA_CON_TU_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Hoja 1",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "node-0002",
+      "name": "Leer Reservas",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "documentId": {
+          "__rl": true,
+          "value": "REEMPLAZA_CON_TU_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Bloqueos",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "node-0003",
+      "name": "Leer Bloqueos",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const query = $('Webhook').first().json.query;\nconst barbero = query.barbero;\nconst fecha = query.fecha;\n\nconst reservas = $('Leer Reservas').all().map(i => i.json);\nconst bloqueos = $('Leer Bloqueos').all().map(i => i.json);\n\n// Comprobar si el día está cerrado por completo\nconst diaCerrado = bloqueos.some(b =>\n  b.fecha === fecha &&\n  b.tipo === 'dia_completo' &&\n  (String(b.empleadoId) === '0' || b.empleadoId === barbero)\n);\n\nif (diaCerrado) {\n  return [{ json: { diaCerrado: true } }];\n}\n\n// Horas ocupadas por reservas existentes\n// Nota: columnas de Hoja 1 con mayúscula (Fecha, Barbero, Hora)\nconst horasReservas = reservas\n  .filter(r => r.Fecha === fecha && r.Barbero === barbero)\n  .map(r => r.Hora);\n\n// Horas bloqueadas por rangos horarios\nconst SLOT = 30;\nconst horasBloqueos = [];\nbloqueos\n  .filter(b =>\n    b.fecha === fecha &&\n    b.tipo === 'horas' &&\n    (String(b.empleadoId) === '0' || b.empleadoId === barbero) &&\n    b.inicio && b.fin\n  )\n  .forEach(b => {\n    const [sh, sm] = b.inicio.split(':').map(Number);\n    const [eh, em] = b.fin.split(':').map(Number);\n    let cur = sh * 60 + sm;\n    const end = eh * 60 + em;\n    while (cur < end) {\n      horasBloqueos.push(\n        String(Math.floor(cur / 60)).padStart(2, '0') + ':' +\n        String(cur % 60).padStart(2, '0')\n      );\n      cur += SLOT;\n    }\n  });\n\nconst horasOcupadas = [...new Set([...horasReservas, ...horasBloqueos])];\nreturn [{ json: { horasOcupadas } }];"
+      },
+      "id": "node-0004",
+      "name": "Procesar Disponibilidad",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              { "name": "Access-Control-Allow-Origin", "value": "*" }
+            ]
+          }
+        }
+      },
+      "id": "node-0005",
+      "name": "Responder",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1120, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "Leer Reservas", "type": "main", "index": 0 }]]
+    },
+    "Leer Reservas": {
+      "main": [[{ "node": "Leer Bloqueos", "type": "main", "index": 0 }]]
+    },
+    "Leer Bloqueos": {
+      "main": [[{ "node": "Procesar Disponibilidad", "type": "main", "index": 0 }]]
+    },
+    "Procesar Disponibilidad": {
+      "main": [[{ "node": "Responder", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

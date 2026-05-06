@@ -1,0 +1,306 @@
+{
+  "name": "ReservaLocal – POST Reserva y Bloqueos",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "REEMPLAZA_CON_TU_PATH_POST",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-0001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 400],
+      "webhookId": "reservalocal-post-001"
+    },
+
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [{
+            "id": "cond-bloquear",
+            "leftValue": "={{ $json.body.accion }}",
+            "rightValue": "bloquear",
+            "operator": { "type": "string", "operation": "equals" }
+          }],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "node-0002",
+      "name": "¿Es Bloquear?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [460, 400]
+    },
+
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [{
+            "id": "cond-desbloquear",
+            "leftValue": "={{ $json.body.accion }}",
+            "rightValue": "desbloquear",
+            "operator": { "type": "string", "operation": "equals" }
+          }],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "node-0003",
+      "name": "¿Es Desbloquear?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [460, 600]
+    },
+
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            { "id": "a1", "name": "id",          "value": "={{ $json.body.id }}",          "type": "string" },
+            { "id": "a2", "name": "fecha",        "value": "={{ $json.body.fecha }}",        "type": "string" },
+            { "id": "a3", "name": "tipo",         "value": "={{ $json.body.tipo }}",         "type": "string" },
+            { "id": "a4", "name": "inicio",       "value": "={{ $json.body.inicio }}",       "type": "string" },
+            { "id": "a5", "name": "fin",          "value": "={{ $json.body.fin }}",          "type": "string" },
+            { "id": "a6", "name": "empleadoId",   "value": "={{ $json.body.empleadoId }}",   "type": "string" },
+            { "id": "a7", "name": "nota",         "value": "={{ $json.body.nota }}",         "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node-0004",
+      "name": "Preparar Bloqueo",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [700, 260]
+    },
+
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "REEMPLAZA_CON_TU_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Bloqueos",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "node-0005",
+      "name": "Guardar Bloqueo",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [920, 260]
+    },
+
+    {
+      "parameters": {
+        "operation": "getAll",
+        "documentId": {
+          "__rl": true,
+          "value": "REEMPLAZA_CON_TU_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Bloqueos",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "node-0006",
+      "name": "Buscar Bloqueo a Borrar",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [700, 460]
+    },
+
+    {
+      "parameters": {
+        "jsCode": "const targetId = $('Webhook').first().json.body.id;\nconst rows = $input.all();\nlet rowNumber = -1;\nfor (let i = 0; i < rows.length; i++) {\n  if (String(rows[i].json.id) === String(targetId)) {\n    rowNumber = i + 2; // fila 1 = cabecera, datos desde fila 2\n    break;\n  }\n}\nif (rowNumber < 0) {\n  return [{ json: { error: 'Bloqueo no encontrado', rowNumber: -1 } }];\n}\nreturn [{ json: { rowNumber } }];"
+      },
+      "id": "node-0007",
+      "name": "Encontrar Fila",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [920, 460]
+    },
+
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "REEMPLAZA_CON_TU_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Bloqueos",
+          "mode": "name"
+        },
+        "startIndex": "={{ $json.rowNumber }}",
+        "endIndex": "={{ $json.rowNumber }}"
+      },
+      "id": "node-0008",
+      "name": "Borrar Fila Bloqueo",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1140, 460]
+    },
+
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            { "id": "b1", "name": "Teléfono", "value": "={{ $json.body.telefono }}", "type": "string" },
+            { "id": "b2", "name": "Nombre",   "value": "={{ $json.body.nombre }}",   "type": "string" },
+            { "id": "b3", "name": "Fecha",    "value": "={{ $json.body.fecha }}",    "type": "string" },
+            { "id": "b4", "name": "Hora",     "value": "={{ $json.body.hora }}",     "type": "string" },
+            { "id": "b5", "name": "Barbero",  "value": "={{ $json.body.empleado }}", "type": "string" },
+            { "id": "b6", "name": "Servicio", "value": "={{ $json.body.servicio }}", "type": "string" },
+            { "id": "b7", "name": "Estado",   "value": "Pendiente",                 "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node-0009",
+      "name": "Preparar Reserva",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [700, 660]
+    },
+
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "REEMPLAZA_CON_TU_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Hoja 1",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "node-0010",
+      "name": "Guardar Reserva",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [920, 660]
+    },
+
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { ok: true } }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              { "name": "Access-Control-Allow-Origin", "value": "*" }
+            ]
+          }
+        }
+      },
+      "id": "node-0011a",
+      "name": "OK Bloqueo",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1140, 260]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { ok: true } }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              { "name": "Access-Control-Allow-Origin", "value": "*" }
+            ]
+          }
+        }
+      },
+      "id": "node-0011b",
+      "name": "OK Desbloqueo",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1360, 460]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { ok: true } }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              { "name": "Access-Control-Allow-Origin", "value": "*" }
+            ]
+          }
+        }
+      },
+      "id": "node-0011c",
+      "name": "OK Reserva",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1140, 660]
+    }
+  ],
+
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "¿Es Bloquear?", "type": "main", "index": 0 }]]
+    },
+    "¿Es Bloquear?": {
+      "main": [
+        [{ "node": "Preparar Bloqueo",    "type": "main", "index": 0 }],
+        [{ "node": "¿Es Desbloquear?",    "type": "main", "index": 0 }]
+      ]
+    },
+    "¿Es Desbloquear?": {
+      "main": [
+        [{ "node": "Buscar Bloqueo a Borrar", "type": "main", "index": 0 }],
+        [{ "node": "Preparar Reserva",        "type": "main", "index": 0 }]
+      ]
+    },
+    "Preparar Bloqueo":        { "main": [[{ "node": "Guardar Bloqueo",     "type": "main", "index": 0 }]] },
+    "Guardar Bloqueo":         { "main": [[{ "node": "OK Bloqueo",          "type": "main", "index": 0 }]] },
+    "Buscar Bloqueo a Borrar": { "main": [[{ "node": "Encontrar Fila",      "type": "main", "index": 0 }]] },
+    "Encontrar Fila":          { "main": [[{ "node": "Borrar Fila Bloqueo", "type": "main", "index": 0 }]] },
+    "Borrar Fila Bloqueo":     { "main": [[{ "node": "OK Desbloqueo",       "type": "main", "index": 0 }]] },
+    "Preparar Reserva":        { "main": [[{ "node": "Guardar Reserva",     "type": "main", "index": 0 }]] },
+    "Guardar Reserva":         { "main": [[{ "node": "OK Reserva",          "type": "main", "index": 0 }]] }
+  },
+
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

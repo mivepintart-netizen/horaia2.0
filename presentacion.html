@@ -1,0 +1,522 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Horaia — Presentación Comercial</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #faf8f5;
+      --cream-dark: #f0ebe3;
+      --cream-darker: #e5ddd3;
+      --dark: #1a1a1a;
+      --dark2: #2d2d2d;
+      --gray: #6b6b6b;
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --green: #16a34a;
+      --red: #dc2626;
+      --border: rgba(0,0,0,0.09);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #d0ccc8;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 32px 16px;
+    }
+
+    .page {
+      width: 794px;
+      min-height: 1123px;
+      background: var(--cream);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── TOP BAR ── */
+    .top-bar {
+      background: var(--dark);
+      padding: 22px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+    .logo span { color: var(--gold); }
+    .top-tagline {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 36px 40px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+    }
+    .hero-text { flex: 1; }
+    .hero-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 30px;
+      font-weight: 900;
+      color: var(--dark);
+      line-height: 1.18;
+      margin-bottom: 12px;
+    }
+    .hero-title em { color: var(--gold); font-style: normal; }
+    .hero-sub {
+      font-size: 13.5px;
+      color: var(--gray);
+      line-height: 1.65;
+      max-width: 440px;
+    }
+    .hero-badge {
+      background: var(--dark);
+      color: #fff;
+      border-radius: 8px;
+      padding: 18px 22px;
+      text-align: center;
+      flex-shrink: 0;
+      width: 160px;
+    }
+    .badge-from { font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+    .badge-price { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--gold); line-height: 1; }
+    .badge-period { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+    .badge-note { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; line-height: 1.4; }
+
+    /* ── PROBLEM ── */
+    .problem-section {
+      padding: 24px 40px;
+      background: #fff6e6;
+      border-bottom: 1px solid #f0d9a0;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .problem-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+    .problem-text { font-size: 13px; color: #7a5800; line-height: 1.6; }
+    .problem-text strong { font-weight: 600; }
+
+    /* ── BODY GRID ── */
+    .body-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      flex: 1;
+    }
+
+    /* ── FEATURES ── */
+    .features-col {
+      padding: 28px 40px 24px 40px;
+      border-right: 1px solid var(--border);
+    }
+    .col-title {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+    .feature-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: flex-start;
+    }
+    .feature-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--cream-dark);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .feature-name { font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 1px; }
+    .feature-desc { font-size: 11.5px; color: var(--gray); line-height: 1.5; }
+
+    /* ── COMPARISON ── */
+    .comparison-col {
+      padding: 28px 36px 24px 36px;
+    }
+    .compare-table { width: 100%; border-collapse: collapse; }
+    .compare-table th {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .compare-table th:first-child { text-align: left; color: var(--gray); }
+    .compare-table th:nth-child(2) { color: var(--gray); text-align: center; }
+    .compare-table th:nth-child(3) { color: var(--gold); text-align: center; }
+    .compare-table td {
+      font-size: 12px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--dark);
+    }
+    .compare-table td:first-child { color: var(--gray); }
+    .compare-table td:nth-child(2),
+    .compare-table td:nth-child(3) { text-align: center; }
+    .yes { color: var(--green); font-size: 15px; font-weight: 700; }
+    .no  { color: var(--red);   font-size: 15px; font-weight: 700; }
+    .neutral { color: var(--gray); font-size: 12px; }
+
+    /* ── PLANS ── */
+    .plans-section {
+      padding: 20px 40px;
+      background: var(--cream-dark);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .plans-title {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .plans-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+    .plan-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .plan-card.featured {
+      background: var(--dark);
+      border-color: var(--dark);
+    }
+    .plan-name {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gray);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .plan-card.featured .plan-name { color: rgba(255,255,255,0.4); }
+    .plan-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .plan-card.featured .plan-price { color: var(--gold); }
+    .plan-price span { font-size: 12px; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--gray); }
+    .plan-card.featured .plan-price span { color: rgba(255,255,255,0.4); }
+    .plan-includes { font-size: 11px; color: var(--gray); line-height: 1.7; }
+    .plan-card.featured .plan-includes { color: rgba(255,255,255,0.6); }
+
+    .addons-row {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .addon-pill {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 11px;
+      color: var(--gray);
+    }
+    .addon-pill strong { color: var(--dark); font-weight: 600; }
+
+    /* ── FOOTER ── */
+    .footer {
+      padding: 18px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-cta {
+      font-size: 13px;
+      color: var(--gray);
+    }
+    .footer-cta strong { color: var(--dark); }
+    .footer-contact {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .contact-item {
+      font-size: 12px;
+      color: var(--gray);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .contact-item span { font-size: 14px; }
+
+    /* ── CORNER ACCENT ── */
+    .corner-accent {
+      position: absolute;
+      top: 0; right: 0;
+      width: 120px; height: 120px;
+      background: linear-gradient(225deg, rgba(201,168,76,0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      body { background: none; padding: 0; }
+      .page { width: 100%; min-height: auto; box-shadow: none; }
+    }
+
+    /* ── PRINT BUTTON (only on screen) ── */
+    .print-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--dark);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 22px;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      transition: background 0.2s;
+    }
+    .print-btn:hover { background: #333; }
+    @media print { .print-btn { display: none; } }
+  </style>
+</head>
+<body>
+
+<div class="page">
+  <div class="corner-accent"></div>
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="logo">Hora<span>ia</span></div>
+    <div class="top-tagline">Reservas online para tu negocio</div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-text">
+      <div class="hero-label">Para peluquerías, barberías y salones</div>
+      <h1 class="hero-title">Tu web y tus reservas,<br><em>sin depender de nadie.</em></h1>
+      <p class="hero-sub">Tus clientes reservan cita directamente desde tu página web, desde Google o desde Instagram. Sin marketplaces, sin comisiones, sin que vean a tu competencia al lado.</p>
+    </div>
+    <div class="hero-badge">
+      <div class="badge-from">desde</div>
+      <div class="badge-price">30€</div>
+      <div class="badge-period">/mes</div>
+      <div class="badge-note">Sin permanencia.<br>Primer mes gratis.</div>
+    </div>
+  </div>
+
+  <!-- PROBLEM CALLOUT -->
+  <div class="problem-section">
+    <div class="problem-icon">💡</div>
+    <div class="problem-text">
+      <strong>¿Usas Booksy o gestionas citas por WhatsApp?</strong> Booksy cobra ~40€/mes y cuando un cliente te busca, ve también a tus competidores. Con WhatsApp pierdes citas fuera de horario. Con Horaia los clientes reservan en <strong>tu propia página</strong>, 24/7, y tú recibes confirmación automática.
+    </div>
+  </div>
+
+  <!-- BODY GRID -->
+  <div class="body-grid">
+
+    <!-- FEATURES -->
+    <div class="features-col">
+      <div class="col-title">Qué incluye</div>
+
+      <div class="feature-item">
+        <div class="feature-icon">📅</div>
+        <div>
+          <div class="feature-name">Reservas online 24/7</div>
+          <div class="feature-desc">Calendario en tiempo real. Los clientes eligen profesional, día y hora en segundos.</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon">🌐</div>
+        <div>
+          <div class="feature-name">Web profesional</div>
+          <div class="feature-desc">Diseño elegante con tus fotos, servicios y precios. Lista en 48h.</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon">🔔</div>
+        <div>
+          <div class="feature-name">Recordatorios automáticos</div>
+          <div class="feature-desc">WhatsApp o email 24h antes de la cita. Reduce no-shows hasta un 40%.</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon">📊</div>
+        <div>
+          <div class="feature-name">Panel de citas</div>
+          <div class="feature-desc">Ve todas tus reservas del día en un vistazo. Sin apps que instalar.</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon">🔗</div>
+        <div>
+          <div class="feature-name">Link directo para compartir</div>
+          <div class="feature-desc">Un enlace para Instagram bio, Google Business o WhatsApp. Tus clientes reservan en 3 clics.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPARISON -->
+    <div class="comparison-col">
+      <div class="col-title">Comparativa</div>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Booksy</th>
+            <th>Horaia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Reservas online</td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Web con tu dominio</td>
+            <td><span class="no">✗</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Diseño personalizado</td>
+            <td><span class="no">✗</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Tus datos, en tu hoja</td>
+            <td><span class="no">✗</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Sin comisiones por cita</td>
+            <td><span class="no">✗</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Competidores visibles</td>
+            <td><span class="no">Sí</span></td>
+            <td><span class="yes">No</span></td>
+          </tr>
+          <tr>
+            <td>Recordatorios WhatsApp</td>
+            <td><span class="neutral">Plan pro</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Precio mensual</td>
+            <td><span class="neutral">~40€</span></td>
+            <td><span class="yes">30–60€</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PLANS -->
+  <div class="plans-section">
+    <div class="plans-title">Planes</div>
+    <div class="plans-grid">
+      <div class="plan-card">
+        <div class="plan-name">Solo Reservas</div>
+        <div class="plan-price">30€ <span>/mes</span></div>
+        <div class="plan-includes">
+          Página de reservas con tu marca<br>
+          Link para Instagram y Google<br>
+          Confirmación automática
+        </div>
+      </div>
+      <div class="plan-card featured">
+        <div class="plan-name">Web + Reservas</div>
+        <div class="plan-price">60€ <span>/mes</span></div>
+        <div class="plan-includes">
+          Web completa con tu dominio<br>
+          Reservas integradas<br>
+          Diseño premium personalizado
+        </div>
+      </div>
+      <div class="plan-card">
+        <div class="plan-name">Extras opcionales</div>
+        <div class="plan-price" style="font-size:14px;color:var(--gray);font-family:'Inter',sans-serif;font-weight:500;margin-bottom:10px;">Añade lo que necesites</div>
+        <div class="plan-includes">
+          +10€/mes &nbsp;·&nbsp; Recordatorios automáticos<br>
+          +15€/mes &nbsp;·&nbsp; Chat en la web<br>
+          +25€/mes &nbsp;·&nbsp; Pagos online
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-cta">
+      <strong>Primer mes gratis, sin permanencia.</strong><br>
+      <span style="font-size:12px;">Tu página lista en 48 horas.</span>
+    </div>
+    <div class="footer-contact">
+      <div class="contact-item"><span>📱</span> +34 XXX XXX XXX</div>
+      <div class="contact-item"><span>✉️</span> hola@Horaia.es</div>
+      <div class="contact-item"><span>🌐</span> Horaia.es</div>
+    </div>
+  </div>
+
+</div>
+
+<button class="print-btn" onclick="window.print()">Guardar como PDF</button>
+
+</body>
+</html>
+
+

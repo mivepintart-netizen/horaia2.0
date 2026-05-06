@@ -1,0 +1,330 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reservar cita &mdash; NOMBRE_NEGOCIO</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --cream:#faf8f5; --cream-dark:#f0ebe3; --cream-darker:#e5ddd3; --dark:#1a1a1a; --dark2:#2d2d2d; --gray:#6b6b6b; --gray-light:#9b9b9b; --white:#ffffff; --gold:#c9a84c; --green:#16a34a; --border:rgba(0,0,0,0.08); --border-dark:rgba(0,0,0,0.14); --radius:6px; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--cream-dark); color: var(--dark); min-height: 100vh; }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .topbar { background: var(--dark); padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .topbar-brand { font-size: 12px; color: rgba(255,255,255,0.35); letter-spacing: 1px; }
+    .topbar-brand span { color: var(--gold); font-family: 'Playfair Display', serif; font-weight: 700; }
+    .topbar-back { font-size: 13px; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+    .topbar-back:hover { color: var(--white); }
+    .biz-header { background: var(--white); border-bottom: 1px solid var(--border); }
+    .biz-header-inner { max-width: 860px; margin: 0 auto; padding: 28px 24px; display: flex; align-items: center; gap: 20px; }
+    .biz-photo { width: 72px; height: 72px; border-radius: 8px; overflow: hidden; flex-shrink: 0; border: 1px solid var(--border); background: var(--cream-dark); }
+    .biz-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .biz-info { flex: 1; }
+    .biz-name { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+    .biz-meta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .biz-meta span { font-size: 13px; color: var(--gray); display: flex; align-items: center; gap: 5px; }
+    .biz-rating { display: flex; align-items: center; gap: 5px; }
+    .stars-small { color: var(--gold); font-size: 12px; letter-spacing: 1px; }
+    .biz-rating-num { font-size: 13px; font-weight: 600; color: var(--dark); }
+    .biz-rating-count { font-size: 12px; color: var(--gray); }
+    .biz-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(22,163,74,0.08); color: var(--green); border: 1px solid rgba(22,163,74,0.2); border-radius: 3px; font-size: 11px; font-weight: 600; padding: 3px 10px; letter-spacing: 0.5px; }
+    .biz-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+    .btn-wa { display: inline-flex; align-items: center; gap: 7px; background: #25d366; color: white; padding: 9px 16px; border-radius: var(--radius); font-size: 13px; font-weight: 600; transition: opacity 0.2s; }
+    .btn-wa:hover { opacity: 0.85; }
+    .btn-web { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--border-dark); color: var(--gray); padding: 9px 16px; border-radius: var(--radius); font-size: 13px; font-weight: 500; transition: all 0.2s; }
+    .btn-web:hover { background: var(--cream-dark); color: var(--dark); }
+    .services-quick { background: var(--cream); border-bottom: 1px solid var(--border); }
+    .services-quick-inner { max-width: 860px; margin: 0 auto; padding: 0 24px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
+    .services-quick-inner::-webkit-scrollbar { display: none; }
+    .service-pill { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 14px 20px; border-right: 1px solid var(--border); flex-shrink: 0; cursor: pointer; transition: background 0.2s; }
+    .service-pill:last-child { border-right: none; }
+    .service-pill:hover { background: var(--cream-dark); }
+    .service-pill-name { font-size: 14px; font-weight: 500; color: var(--dark); white-space: nowrap; }
+    .service-pill-right { display: flex; flex-direction: column; align-items: flex-end; }
+    .service-pill-price { font-size: 14px; font-weight: 700; color: var(--dark); }
+    .service-pill-time { font-size: 11px; color: var(--gray-light); }
+    .main { max-width: 860px; margin: 0 auto; padding: 32px 24px 64px; }
+    .main-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--dark); margin-bottom: 20px; }
+    .booking-widget { background: var(--white); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.05); }
+    .booking-progress { display: flex; align-items: center; padding: 20px 32px; background: var(--cream); border-bottom: 1px solid var(--border); }
+    .progress-step { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
+    .progress-dot { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--border-dark); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--gray-light); transition: all 0.3s; }
+    .progress-step span { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray-light); transition: color 0.3s; }
+    .progress-step.active .progress-dot { background: var(--dark); border-color: var(--dark); color: var(--white); }
+    .progress-step.active span { color: var(--dark); font-weight: 600; }
+    .progress-step.completed .progress-dot { background: var(--cream-dark); border-color: var(--dark); color: var(--dark); font-size: 0; }
+    .progress-step.completed .progress-dot::after { content: '✓'; font-size: 13px; }
+    .progress-line { flex: 1; height: 1px; background: var(--border-dark); margin: 0 10px; margin-bottom: 20px; }
+    .booking-body { padding: 32px; }
+    .booking-step-content { display: none; }
+    .booking-step-content.active { display: block; animation: fadeUp 0.3s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .step-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 24px; color: var(--dark); }
+    .barbers-grid { display: flex; flex-direction: column; gap: 10px; }
+    .barber-card { display: flex; align-items: center; gap: 16px; padding: 14px 18px; border: 1px solid var(--border-dark); border-radius: var(--radius); cursor: pointer; transition: all 0.2s; background: var(--cream); }
+    .barber-card:hover { border-color: var(--dark); background: var(--cream-dark); }
+    .barber-card.selected { border-color: var(--dark); background: var(--dark); color: var(--white); }
+    .barber-avatar-lg { width: 46px; height: 46px; border-radius: 50%; border: 1.5px solid var(--border-dark) !important; background: var(--cream-darker) !important; color: var(--dark) !important; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 800; flex-shrink: 0; }
+    .barber-card.selected .barber-avatar-lg { border-color: rgba(255,255,255,0.25) !important; background: rgba(255,255,255,0.1) !important; color: var(--white) !important; }
+    .barber-details { flex: 1; }
+    .barber-details strong { display: block; font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+    .barber-details span { font-size: 12px; color: var(--gray); }
+    .barber-card.selected .barber-details span { color: rgba(255,255,255,0.55); }
+    .barber-schedule { font-size: 12px; color: var(--gray); background: var(--cream-darker); padding: 4px 10px; border-radius: 3px; }
+    .barber-card.selected .barber-schedule { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); }
+    .barber-check { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--border-dark); display: flex; align-items: center; justify-content: center; font-size: 11px; color: transparent; transition: all 0.2s; }
+    .barber-card.selected .barber-check { background: var(--white); border-color: var(--white); color: var(--dark); }
+    .week-navigator { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .week-btn { width: 32px; height: 32px; border-radius: 4px; border: 1px solid var(--border-dark); background: none; color: var(--dark); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .week-btn:hover { border-color: var(--dark); background: var(--cream-dark); }
+    .week-label { font-size: 13px; color: var(--dark2); font-weight: 500; flex: 1; text-align: center; }
+    .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 20px; }
+    .day-btn { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 9px 4px; border-radius: 4px; border: 1px solid var(--border); background: var(--cream); cursor: pointer; transition: all 0.2s; }
+    .day-btn.available:hover { border-color: var(--dark); background: var(--cream-dark); }
+    .day-btn.selected { background: var(--dark) !important; border-color: var(--dark) !important; color: white !important; }
+    .day-btn.disabled { color: var(--gray-light); cursor: not-allowed; }
+    .day-name { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--gray-light); }
+    .day-btn.selected .day-name { color: rgba(255,255,255,0.65); }
+    .day-num { font-size: 16px; font-weight: 700; color: var(--dark); }
+    .day-btn.selected .day-num { color: var(--white); }
+    .day-btn.disabled .day-num { color: var(--gray-light); }
+    .slots-legend { display: flex; gap: 16px; margin-bottom: 14px; }
+    .legend-item { font-size: 12px; color: var(--gray); }
+    .legend-available { color: var(--green); }
+    .legend-taken { color: var(--gray-light); }
+    .slots-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; margin-bottom: 20px; }
+    .slot-btn { padding: 9px 4px; border-radius: 4px; border: 1px solid; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+    .slot-btn.available { border-color: rgba(22,163,74,0.28); color: var(--green); background: rgba(22,163,74,0.05); }
+    .slot-btn.available:hover { background: rgba(22,163,74,0.12); border-color: var(--green); }
+    .slot-btn.selected { background: var(--dark) !important; border-color: var(--dark) !important; color: var(--white) !important; font-weight: 800; }
+    .slot-btn.taken, .slot-btn.past { border-color: var(--border); color: var(--gray-light); background: var(--cream); cursor: not-allowed; text-decoration: line-through; }
+    .no-slots { color: var(--gray); font-size: 14px; padding: 16px 0; }
+    .slots-loading { color: var(--gray); font-size: 14px; padding: 20px 0; display: flex; align-items: center; gap: 10px; }
+    .slots-loading::before { content: ''; width: 14px; height: 14px; border: 2px solid var(--border-dark); border-top-color: var(--dark); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .mini-summary { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .mini-barber, .mini-date { padding: 4px 12px; border-radius: 3px; font-size: 12px; font-weight: 600; border: 1px solid; }
+    .mini-date { border-color: var(--border-dark); color: var(--dark2); background: var(--cream-dark); }
+    .summary-card { background: var(--cream); border: 1px solid var(--border-dark); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 20px; }
+    .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gray-light); }
+    .summary-value { font-size: 14px; font-weight: 600; color: var(--dark); }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gray); margin-bottom: 7px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; background: var(--cream); border: 1px solid var(--border-dark); border-radius: 4px; padding: 11px 14px; color: var(--dark); font-size: 15px; font-family: inherit; outline: none; appearance: none; transition: border-color 0.2s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--dark); box-shadow: 0 0 0 2px rgba(0,0,0,0.05); }
+    .form-group select option { background: var(--white); color: var(--dark); }
+    .form-group textarea { resize: vertical; min-height: 70px; }
+    .btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: var(--dark); color: var(--white); padding: 13px; border-radius: var(--radius); font-weight: 600; font-size: 15px; border: none; cursor: pointer; transition: all 0.2s; }
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+    .btn-back { background: none; border: none; color: var(--gray); font-size: 13px; cursor: pointer; padding: 8px 0; transition: color 0.2s; font-family: inherit; margin-top: 6px; display: block; }
+    .btn-back:hover { color: var(--dark); }
+    .form-note { text-align: center; font-size: 12px; color: var(--gray); margin-top: 10px; }
+    .booking-confirmed { text-align: center; padding: 20px 0 8px; }
+    .confirmed-icon { font-size: 48px; margin-bottom: 14px; }
+    .booking-confirmed h3 { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; margin-bottom: 18px; color: var(--dark); }
+    .confirmed-details { background: var(--cream); border: 1px solid var(--border-dark); border-radius: var(--radius); padding: 18px 22px; text-align: left; margin-bottom: 18px; display: inline-block; min-width: 260px; }
+    .confirmed-row { font-size: 14px; color: var(--dark2); padding: 4px 0; }
+    .confirmed-note { font-size: 13px; color: var(--gray); margin-bottom: 20px; }
+    .powered-by { text-align: center; padding: 20px 0 0; border-top: 1px solid var(--border); margin-top: 32px; }
+    .powered-by a { font-size: 12px; color: var(--gray-light); display: inline-flex; align-items: center; gap: 5px; transition: color 0.2s; }
+    .powered-by a:hover { color: var(--dark); }
+    .powered-by a span { font-family: 'Playfair Display', serif; color: var(--gold); font-weight: 700; }
+    @media (max-width: 600px) {
+      .biz-header-inner { flex-wrap: wrap; }
+      .biz-actions { flex-direction: row; width: 100%; justify-content: flex-start; }
+      .booking-progress { padding: 16px; }
+      .progress-step span { display: none; }
+      .progress-line { margin: 0 4px; margin-bottom: 18px; }
+      .booking-body { padding: 20px 16px; }
+      .slots-grid { grid-template-columns: repeat(4, 1fr); }
+      .days-grid { gap: 3px; }
+      .day-btn { padding: 7px 2px; }
+      .day-num { font-size: 14px; }
+      .service-pill { padding: 12px 14px; gap: 20px; }
+      .topbar { padding: 10px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand">Reservas via <span>Horaia</span></div>
+  <a href="index.html" class="topbar-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    Ver web completa
+  </a>
+</div>
+
+<!-- BUSINESS HEADER -->
+<div class="biz-header">
+  <div class="biz-header-inner">
+    <div class="biz-photo">
+      <!-- LOGO del negocio -->
+      <img src="images/logo.png" alt="NOMBRE_NEGOCIO" />
+    </div>
+    <div class="biz-info">
+      <div class="biz-name">NOMBRE_NEGOCIO</div>
+      <div class="biz-meta">
+        <div class="biz-rating">
+          <span class="stars-small">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+          <span class="biz-rating-num">5.0</span>
+          <span class="biz-rating-count">(NUMERO_RESENAS+ rese&ntilde;as)</span>
+        </div>
+        <span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          BARRIO, CIUDAD
+        </span>
+        <span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          HORARIO_SEMANA
+        </span>
+        <span class="biz-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+          Abierto ahora
+        </span>
+      </div>
+    </div>
+    <div class="biz-actions">
+      <a href="https://wa.me/TELEFONO_SIN_ESPACIOS" class="btn-wa">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+        WhatsApp
+      </a>
+      <a href="index.html" class="btn-web">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Ver web
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES QUICK — una línea por servicio -->
+<div class="services-quick">
+  <div class="services-quick-inner">
+    <div class="service-pill">
+      <span class="service-pill-name">SERVICIO_1_NOMBRE</span>
+      <div class="service-pill-right">
+        <span class="service-pill-price">SERVICIO_1_PRECIO&euro;</span>
+        <span class="service-pill-time">SERVICIO_1_DURACION min</span>
+      </div>
+    </div>
+    <div class="service-pill">
+      <span class="service-pill-name">SERVICIO_2_NOMBRE</span>
+      <div class="service-pill-right">
+        <span class="service-pill-price">SERVICIO_2_PRECIO&euro;</span>
+        <span class="service-pill-time">SERVICIO_2_DURACION min</span>
+      </div>
+    </div>
+    <div class="service-pill">
+      <span class="service-pill-name">SERVICIO_3_NOMBRE</span>
+      <div class="service-pill-right">
+        <span class="service-pill-price">SERVICIO_3_PRECIO&euro;</span>
+        <span class="service-pill-time">SERVICIO_3_DURACION min</span>
+      </div>
+    </div>
+    <div class="service-pill">
+      <span class="service-pill-name">SERVICIO_4_NOMBRE</span>
+      <div class="service-pill-right">
+        <span class="service-pill-price">SERVICIO_4_PRECIO&euro;</span>
+        <span class="service-pill-time">SERVICIO_4_DURACION min</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOOKING WIDGET — no tocar nada de aquí abajo -->
+<div class="main">
+  <p class="main-title">Elige tu cita</p>
+  <div class="booking-widget">
+    <div class="booking-progress">
+      <div class="progress-step active" data-step="1"><div class="progress-dot">1</div><span>Profesional</span></div>
+      <div class="progress-line"></div>
+      <div class="progress-step" data-step="2"><div class="progress-dot">2</div><span>Fecha</span></div>
+      <div class="progress-line"></div>
+      <div class="progress-step" data-step="3"><div class="progress-dot">3</div><span>Hora</span></div>
+      <div class="progress-line"></div>
+      <div class="progress-step" data-step="4"><div class="progress-dot">4</div><span>Datos</span></div>
+      <div class="progress-line"></div>
+      <div class="progress-step" data-step="5"><div class="progress-dot">5</div><span>Listo</span></div>
+    </div>
+    <div class="booking-body">
+      <div class="booking-step-content active" id="bookStep1">
+        <p class="step-title">Elige tu profesional</p>
+        <div class="barbers-grid" id="barbersGrid"></div>
+      </div>
+      <div class="booking-step-content" id="bookStep2">
+        <p class="step-title">Selecciona el dia</p>
+        <div class="week-navigator">
+          <button class="week-btn" id="prevWeek">&#8249;</button>
+          <span class="week-label" id="weekLabel"></span>
+          <button class="week-btn" id="nextWeek">&#8250;</button>
+        </div>
+        <div class="days-grid" id="daysGrid"></div>
+        <button class="btn-back" onclick="goToStep(1)">&#8592; Cambiar profesional</button>
+      </div>
+      <div class="booking-step-content" id="bookStep3">
+        <p class="step-title">Selecciona la hora</p>
+        <div id="summaryMini"></div>
+        <div class="slots-legend">
+          <span class="legend-item legend-available">&#9679; Disponible</span>
+          <span class="legend-item legend-taken">&#9679; Ocupado</span>
+        </div>
+        <div class="slots-grid" id="slotsGrid"></div>
+        <button class="btn-back" onclick="goToStep(2)">&#8592; Cambiar fecha</button>
+      </div>
+      <div class="booking-step-content" id="bookStep4">
+        <p class="step-title">Tus datos</p>
+        <div id="summaryCard"></div>
+        <form id="reservaForm">
+          <div class="form-group">
+            <label for="nombre">Nombre completo</label>
+            <input type="text" id="nombre" placeholder="Tu nombre" required />
+          </div>
+          <div class="form-group">
+            <label for="telefono">Telefono (WhatsApp)</label>
+            <input type="tel" id="telefono" placeholder="+34 600 000 000" required />
+          </div>
+          <div class="form-group">
+            <label for="servicio">Servicio</label>
+            <select id="servicio" required>
+              <option value="">Selecciona un servicio</option>
+              <option value="SERVICIO_1_NOMBRE">SERVICIO_1_NOMBRE &mdash; SERVICIO_1_PRECIO&euro;</option>
+              <option value="SERVICIO_2_NOMBRE">SERVICIO_2_NOMBRE &mdash; SERVICIO_2_PRECIO&euro;</option>
+              <option value="SERVICIO_3_NOMBRE">SERVICIO_3_NOMBRE &mdash; SERVICIO_3_PRECIO&euro;</option>
+              <option value="SERVICIO_4_NOMBRE">SERVICIO_4_NOMBRE &mdash; SERVICIO_4_PRECIO&euro;</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="nota">Notas (opcional)</label>
+            <textarea id="nota" placeholder="Preferencias especiales..."></textarea>
+          </div>
+          <button type="submit" class="btn-primary">Confirmar reserva</button>
+          <p class="form-note">Recibir&aacute;s confirmaci&oacute;n por WhatsApp</p>
+          <button type="button" class="btn-back" onclick="goToStep(3)">&#8592; Cambiar hora</button>
+        </form>
+      </div>
+      <div class="booking-step-content" id="bookStep5">
+        <div class="booking-confirmed">
+          <div class="confirmed-icon">&#x2705;</div>
+          <h3>Reserva confirmada</h3>
+          <div class="confirmed-details" id="confirmedDetails"></div>
+          <p class="confirmed-note">Te enviamos un recordatorio por WhatsApp 24h antes.</p>
+          <button class="btn-primary" style="max-width:240px;margin:0 auto" onclick="resetBooking()">Hacer otra reserva</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="powered-by">
+    <a href="../plataforma.html">Reservas gestionadas por <span>Horaia</span></a>
+  </div>
+</div>
+
+<!-- script.js contiene los datos de empleados y webhooks — editar allí -->
+<script src="script.js"></script>
+</body>
+</html>
+
