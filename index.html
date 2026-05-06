@@ -332,6 +332,68 @@
 
     footer p { font-size: 13px; color: rgba(255,255,255,0.28); }
 
+    /* ===== HERO BADGE ===== */
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--gold); color: var(--dark);
+      font-size: 13px; font-weight: 700; letter-spacing: 0.5px;
+      padding: 8px 20px; border-radius: 50px; margin-bottom: 24px;
+      box-shadow: 0 4px 16px rgba(201,168,76,0.3);
+    }
+
+    /* ===== PAIN ===== */
+    .pain { padding: 90px 0; background: var(--dark); text-align: center; }
+    .pain .section-label { color: rgba(255,255,255,0.4); }
+    .pain-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 44px); font-weight: 700; color: var(--white); margin-bottom: 14px; }
+    .pain-title span { color: var(--gold); font-style: italic; }
+    .pain-sub { font-size: 17px; color: rgba(255,255,255,0.5); max-width: 540px; margin: 0 auto 52px; }
+    .pain-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; max-width: 860px; margin: 0 auto 40px; }
+    .pain-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 32px 24px; }
+    .pain-num { font-family: 'Playfair Display', serif; font-size: 46px; font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: 10px; }
+    .pain-card p { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.65; }
+    .pain-divider { display: flex; align-items: center; justify-content: center; gap: 16px; color: rgba(255,255,255,0.35); font-size: 14px; font-style: italic; }
+    .pain-divider::before, .pain-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); max-width: 140px; }
+
+    /* ===== COMPARISON ===== */
+    .comparison { padding: 100px 0; background: var(--cream); }
+    .comp-wrapper { max-width: 820px; margin: 56px auto 0; overflow-x: auto; }
+    .comp-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+    .comp-table th { padding: 16px 20px; font-weight: 700; }
+    .comp-table th:first-child { text-align: left; color: var(--gray); font-family: 'Inter',sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; }
+    .comp-table th.col-horaia { background: var(--dark); color: var(--gold); border-radius: 8px 8px 0 0; font-family: 'Playfair Display',serif; font-size: 17px; }
+    .comp-table th.col-other { color: var(--gray-light); font-family: 'Inter',sans-serif; font-size: 13px; }
+    .comp-table td { padding: 14px 20px; border-top: 1px solid var(--border); text-align: center; }
+    .comp-table td:first-child { text-align: left; color: var(--dark2); font-size: 14px; }
+    .comp-table tr:hover td { background: var(--cream-dark); }
+    .comp-table td.col-horaia { background: rgba(26,26,26,0.04); font-weight: 600; }
+    .comp-yes { color: #2a9d4e; font-size: 17px; }
+    .comp-no { color: #cc3333; font-size: 17px; }
+    .comp-val { font-weight: 700; color: var(--dark); }
+    .comp-muted { color: var(--gray-light); font-size: 13px; }
+
+    /* ===== TESTIMONIALS ===== */
+    .testimonials { padding: 100px 0; background: var(--cream-dark); }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 56px; }
+    .testi-card { background: var(--white); border-radius: 12px; padding: 32px 28px; border: 1px solid var(--border); position: relative; }
+    .testi-quote { font-size: 52px; line-height: 1; color: var(--gold); opacity: 0.25; font-family: 'Playfair Display',serif; position: absolute; top: 14px; left: 22px; }
+    .testi-stars { color: var(--gold); font-size: 13px; margin-bottom: 10px; letter-spacing: 2px; }
+    .testi-text { font-size: 15px; color: var(--dark2); line-height: 1.75; margin-bottom: 24px; margin-top: 14px; font-style: italic; }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
+    .testi-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--dark); color: var(--white); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display',serif; font-size: 16px; font-weight: 700; flex-shrink: 0; }
+    .testi-info strong { display: block; font-size: 14px; color: var(--dark); font-weight: 600; }
+    .testi-info span { font-size: 12px; color: var(--gray-light); }
+
+    /* ===== FAQ ===== */
+    .faq { padding: 100px 0; background: var(--cream); }
+    .faq-list { max-width: 720px; margin: 56px auto 0; }
+    .faq-item { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--white); margin-bottom: 8px; }
+    .faq-q { width: 100%; text-align: left; padding: 20px 24px; background: none; border: none; font-family: 'Inter',sans-serif; font-size: 15px; font-weight: 600; color: var(--dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; transition: background 0.2s; }
+    .faq-q:hover { background: var(--cream); }
+    .faq-icon { font-size: 22px; color: var(--gold); flex-shrink: 0; transition: transform 0.3s; line-height: 1; }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.35s ease; padding: 0 24px; font-size: 14px; color: var(--gray); line-height: 1.75; }
+    .faq-item.open .faq-a { max-height: 200px; padding: 0 24px 20px; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
       .steps { grid-template-columns: 1fr; gap: 32px; }
@@ -341,6 +403,10 @@
       .browser-content { height: 320px; }
       .browser-content iframe { transform: scale(0.46); width: 218%; height: 900px; }
       .logos-row { gap: 20px; }
+      .pain-grid { grid-template-columns: 1fr; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .comp-table { font-size: 13px; }
+      .comp-table th, .comp-table td { padding: 10px 12px; }
     }
   </style>
 </head>
@@ -353,6 +419,7 @@
     <div class="nav-actions">
       <a href="#como-funciona" class="nav-link">C&oacute;mo funciona</a>
       <a href="#precios" class="nav-link">Precios</a>
+      <a href="#faq" class="nav-link">FAQ</a>
       <a href="#contacto" class="btn btn-dark">Solicitar demo</a>
     </div>
   </div>
@@ -361,6 +428,7 @@
 <!-- HERO -->
 <section class="hero">
   <div class="container">
+    <div class="hero-badge">🎁 Primer mes completamente gratis</div>
     <span class="hero-label">Plataforma de reservas</span>
     <h1 class="hero-title">
       Tu web y tus reservas.<br><span>Sin comisiones.</span>
@@ -377,6 +445,30 @@
   </div>
 </section>
 
+
+<!-- PAIN -->
+<section class="pain">
+  <div class="container">
+    <span class="section-label">La realidad</span>
+    <h2 class="pain-title">¿Cuánto llevas pagando<br>de <span>comisiones</span>?</h2>
+    <p class="pain-sub">Booksy y Treatwell te traen clientes, sí. Pero cada reserva tiene un precio. ¿Lo has calculado?</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-num">15%</div>
+        <p>Es la comisión media que cobran por cada reserva nueva que entra por su plataforma</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-num">0€</div>
+        <p>Lo que recuperas cuando un cliente cancela, aunque ellos ya cobraron su parte</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-num">∞</div>
+        <p>Clientes que son suyos, no tuyos. Si te vas de la plataforma, los pierdes todos</p>
+      </div>
+    </div>
+    <div class="pain-divider">Con Horaia pagas precio fijo y tus clientes son siempre tuyos</div>
+  </div>
+</section>
 
 <!-- LOGOS -->
 <div class="logos-strip">
@@ -458,6 +550,116 @@
   </div>
 </section>
 
+<!-- COMPARISON -->
+<section class="comparison" id="comparativa">
+  <div class="container">
+    <span class="section-label">Comparativa</span>
+    <h2 class="section-title">Horaia vs <span>las alternativas</span></h2>
+    <div class="comp-wrapper">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="col-horaia">Horaia</th>
+            <th class="col-other">Booksy</th>
+            <th class="col-other">Treatwell</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Comisión por reserva</td>
+            <td class="col-horaia"><span class="comp-val">0%</span></td>
+            <td><span class="comp-no">✕</span> <span class="comp-muted">hasta 20%</span></td>
+            <td><span class="comp-no">✕</span> <span class="comp-muted">hasta 30%</span></td>
+          </tr>
+          <tr>
+            <td>Página web con tu dominio</td>
+            <td class="col-horaia"><span class="comp-yes">✓</span></td>
+            <td><span class="comp-no">✕</span></td>
+            <td><span class="comp-no">✕</span></td>
+          </tr>
+          <tr>
+            <td>Diseño personalizado</td>
+            <td class="col-horaia"><span class="comp-yes">✓</span></td>
+            <td><span class="comp-no">✕</span></td>
+            <td><span class="comp-no">✕</span></td>
+          </tr>
+          <tr>
+            <td>Tus clientes son tuyos</td>
+            <td class="col-horaia"><span class="comp-yes">✓</span></td>
+            <td><span class="comp-no">✕</span></td>
+            <td><span class="comp-no">✕</span></td>
+          </tr>
+          <tr>
+            <td>Precio mensual fijo</td>
+            <td class="col-horaia"><span class="comp-val">desde 30€</span></td>
+            <td><span class="comp-muted">Variable</span></td>
+            <td><span class="comp-muted">Variable</span></td>
+          </tr>
+          <tr>
+            <td>Sin permanencia</td>
+            <td class="col-horaia"><span class="comp-yes">✓</span></td>
+            <td><span class="comp-yes">✓</span></td>
+            <td><span class="comp-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Panel de gestión propio</td>
+            <td class="col-horaia"><span class="comp-yes">✓</span></td>
+            <td><span class="comp-yes">✓</span></td>
+            <td><span class="comp-yes">✓</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonios">
+  <div class="container">
+    <span class="section-label">Lo que dicen</span>
+    <h2 class="section-title">Negocios que ya<br><span>dejaron las comisiones</span></h2>
+    <div class="testimonials-grid">
+      <div class="testi-card">
+        <div class="testi-quote">&ldquo;</div>
+        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testi-text">Llevaba 2 años en Booksy pagando comisiones. Con Horaia en el primer mes recuperé lo que pagaba en 3. Y mis clientes reservan directamente conmigo.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">C</div>
+          <div class="testi-info">
+            <strong>Carlos M.</strong>
+            <span>Barber&iacute;a The Cut &middot; Madrid</span>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote">&ldquo;</div>
+        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testi-text">En 48 horas ten&iacute;a la web funcionando. Mis clientas dicen que parece una cl&iacute;nica de lujo. Y la gestiono desde el m&oacute;vil sin saber nada de inform&aacute;tica.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">L</div>
+          <div class="testi-info">
+            <strong>Laura F.</strong>
+            <span>Centro Est&eacute;tica Lumi&egrave;re &middot; Barcelona</span>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote">&ldquo;</div>
+        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testi-text">El primer mes fue gratis y me convenci&oacute; solo. Ahora tengo las citas organizadas, sin WhatsApps a medianoche. Mis pacientes reservan solos.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">M</div>
+          <div class="testi-info">
+            <strong>Marcos A.</strong>
+            <span>Fisioterapeuta &middot; Vigo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- PRICING -->
 <section class="pricing" id="precios">
   <div class="container">
@@ -523,6 +725,40 @@
   </div>
 </section>
 
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="container">
+    <span class="section-label">Dudas frecuentes</span>
+    <h2 class="section-title">Preguntas que<br><span>seguro te haces</span></h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q">&iquest;Necesito saber de inform&aacute;tica o dise&ntilde;o? <span class="faq-icon">+</span></button>
+        <div class="faq-a">No. Nosotros nos encargamos de todo. T&uacute; nos das los datos —nombre, servicios, fotos, horarios— y en menos de 48 horas tienes la web lista y funcionando.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">&iquest;Qu&eacute; pasa si quiero cancelar? <span class="faq-icon">+</span></button>
+        <div class="faq-a">Sin permanencia, sin letra peque&ntilde;a. Cancelas cuando quieras con un mensaje por WhatsApp. No te cobraremos nada m&aacute;s.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">&iquest;Mis clientes necesitan descargarse una app? <span class="faq-icon">+</span></button>
+        <div class="faq-a">No. Tus clientes reservan desde el navegador del m&oacute;vil, sin registros ni apps. En 3 clics tienen su cita confirmada.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">&iquest;Puedo tener varios empleados o profesionales? <span class="faq-icon">+</span></button>
+        <div class="faq-a">S&iacute;. Puedes gestionar varios perfiles de empleados, cada uno con sus propios horarios y servicios. Los clientes eligen con qui&eacute;n quieren la cita.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">&iquest;Qu&eacute; pasa con mis datos si me voy? <span class="faq-icon">+</span></button>
+        <div class="faq-a">Son tuyos, siempre. Si decides irte, te entregamos todos los datos de tus clientes y reservas en el formato que necesites.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">&iquest;Cu&aacute;nto tarda en estar lista mi web? <span class="faq-icon">+</span></button>
+        <div class="faq-a">Menos de 48 horas desde que nos das los datos. En casos simples, el mismo d&iacute;a. Incluye dominio configurado y todo listo para compartir.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CTA FINAL -->
 <section class="cta-section" id="contacto">
   <div class="container">
@@ -543,6 +779,16 @@
   </div>
 </footer>
 
+<script>
+  document.querySelectorAll('.faq-q').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var item = this.closest('.faq-item');
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
 </body>
 </html>
 
