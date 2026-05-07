@@ -676,14 +676,30 @@
 <section class="pricing" id="precios">
   <div class="container">
     <span class="section-label">Precio</span>
-    <h2 class="section-title" style="margin-bottom:48px">Simple y <span>transparente</span></h2>
+    <h2 class="section-title" style="margin-bottom:32px">Simple y <span>transparente</span></h2>
+
+    <!-- BILLING TOGGLE -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:48px;">
+      <span id="labelMensual" style="font-size:14px;font-weight:600;color:var(--dark)">Mensual</span>
+      <label style="position:relative;display:inline-block;width:52px;height:28px;cursor:pointer;">
+        <input type="checkbox" id="billingToggle" style="opacity:0;width:0;height:0;" onchange="toggleBilling(this.checked)">
+        <span id="toggleSlider" style="position:absolute;inset:0;background:var(--dark);border-radius:28px;transition:background 0.3s;">
+          <span style="position:absolute;top:4px;left:4px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform 0.3s;display:block;" id="toggleBall"></span>
+        </span>
+      </label>
+      <span id="labelAnual" style="font-size:14px;font-weight:500;color:var(--gray)">
+        Anual &nbsp;<span style="background:rgba(201,168,76,0.18);color:var(--gold);font-size:11px;font-weight:700;letter-spacing:1.5px;padding:3px 10px;border-radius:3px;border:1px solid rgba(201,168,76,0.3);">2 MESES GRATIS</span>
+      </span>
+    </div>
+
     <div class="pricing-grid">
 
       <!-- PLAN 1 -->
       <div class="pricing-card">
         <div class="pricing-badge">Solo reservas</div>
-        <div class="pricing-price"><sup>€</sup>30</div>
-        <div class="pricing-period">al mes &middot; sin permanencia</div>
+        <div class="pricing-price"><sup>€</sup><span id="price1">30</span></div>
+        <div class="pricing-period" id="period1">al mes &middot; sin permanencia</div>
+        <p id="annualNote1" style="display:none;font-size:13px;color:var(--gold);font-weight:600;margin-bottom:16px;margin-top:-8px;">300€/a&ntilde;o &middot; pagas 10, son 12</p>
         <ul class="pricing-features">
           <li>P&aacute;gina de reservas con tu marca</li>
           <li>Link para Instagram y Google Business</li>
@@ -692,14 +708,15 @@
           <li>Sin comisi&oacute;n por reserva</li>
         </ul>
         <a href="#contacto" class="btn btn-gold btn-lg" style="width:100%;justify-content:center;display:flex;">Empezar ahora</a>
-        <p class="pricing-note">Primer mes gratis &middot; Cancelas cuando quieras</p>
+        <p class="pricing-note" id="note1">Primer mes gratis &middot; Cancelas cuando quieras</p>
       </div>
 
       <!-- PLAN 2 -->
       <div class="pricing-card highlight">
         <div class="pricing-badge">Web + Reservas</div>
-        <div class="pricing-price"><sup>€</sup>60</div>
-        <div class="pricing-period">al mes &middot; sin permanencia</div>
+        <div class="pricing-price"><sup>€</sup><span id="price2">60</span></div>
+        <div class="pricing-period" id="period2">al mes &middot; sin permanencia</div>
+        <p id="annualNote2" style="display:none;font-size:13px;color:var(--gold);font-weight:600;margin-bottom:16px;margin-top:-8px;">600€/a&ntilde;o &middot; pagas 10, son 12</p>
         <ul class="pricing-features">
           <li>Todo lo del plan anterior</li>
           <li>Web profesional completa</li>
@@ -708,7 +725,7 @@
           <li>Soporte directo por WhatsApp</li>
         </ul>
         <a href="#contacto" class="btn btn-gold btn-lg" style="width:100%;justify-content:center;display:flex;">Empezar ahora</a>
-        <p class="pricing-note">Primer mes gratis &middot; Cancelas cuando quieras</p>
+        <p class="pricing-note" id="note2">Primer mes gratis &middot; Cancelas cuando quieras</p>
       </div>
 
     </div>
@@ -777,7 +794,7 @@
     <span class="section-label">Empieza hoy</span>
     <h2 class="cta-title">Tu negocio merece<br>una web propia</h2>
     <p class="cta-sub">Sin t&eacute;cnico, sin dise&ntilde;ador, sin complicaciones.<br>En 48h tienes tu web y tus reservas funcionando.</p>
-    <a href="https://wa.me/34674797333?text=Hola!%20He%20visto%20Horaia%20y%20me%20gustar%C3%ADa%20probarlo%20para%20mi%20negocio.%20%C2%BFPod%C3%A9is%20contarme%20c%C3%B3mo%20funciona%3F" class="btn btn-gold btn-lg">Quiero probarlo</a>
+    <a href="https://wa.me/34886447297?text=Hola!%20He%20visto%20Horaia%20y%20me%20gustar%C3%ADa%20probarlo%20para%20mi%20negocio.%20%C2%BFPod%C3%A9is%20contarme%20c%C3%B3mo%20funciona%3F" class="btn btn-gold btn-lg">Quiero probarlo</a>
   </div>
 </section>
 
@@ -800,6 +817,38 @@
       if (!isOpen) item.classList.add('open');
     });
   });
+
+  function toggleBilling(isAnnual) {
+    var ball = document.getElementById('toggleBall');
+    var lMensual = document.getElementById('labelMensual');
+    var lAnual   = document.getElementById('labelAnual');
+
+    if (isAnnual) {
+      ball.style.transform = 'translateX(24px)';
+      lMensual.style.fontWeight = '500'; lMensual.style.color = 'var(--gray)';
+      lAnual.style.fontWeight   = '600'; lAnual.style.color   = 'var(--dark)';
+      document.getElementById('price1').textContent  = '25';
+      document.getElementById('period1').textContent = 'al mes · facturado anualmente';
+      document.getElementById('annualNote1').style.display = 'block';
+      document.getElementById('note1').textContent  = '300€/año · 2 meses de regalo';
+      document.getElementById('price2').textContent  = '50';
+      document.getElementById('period2').textContent = 'al mes · facturado anualmente';
+      document.getElementById('annualNote2').style.display = 'block';
+      document.getElementById('note2').textContent  = '600€/año · 2 meses de regalo';
+    } else {
+      ball.style.transform = 'translateX(0)';
+      lMensual.style.fontWeight = '600'; lMensual.style.color = 'var(--dark)';
+      lAnual.style.fontWeight   = '500'; lAnual.style.color   = 'var(--gray)';
+      document.getElementById('price1').textContent  = '30';
+      document.getElementById('period1').textContent = 'al mes · sin permanencia';
+      document.getElementById('annualNote1').style.display = 'none';
+      document.getElementById('note1').textContent  = 'Primer mes gratis · Cancelas cuando quieras';
+      document.getElementById('price2').textContent  = '60';
+      document.getElementById('period2').textContent = 'al mes · sin permanencia';
+      document.getElementById('annualNote2').style.display = 'none';
+      document.getElementById('note2').textContent  = 'Primer mes gratis · Cancelas cuando quieras';
+    }
+  }
 </script>
 </body>
 </html>
