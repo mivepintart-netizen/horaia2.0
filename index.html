@@ -394,6 +394,49 @@
     .faq-item.open .faq-a { max-height: 200px; padding: 0 24px 20px; }
     .faq-item.open .faq-icon { transform: rotate(45deg); }
 
+    /* ===== MODALES LEGALES ===== */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.78); z-index: 9999;
+      overflow-y: auto; padding: 40px 16px;
+    }
+    .modal-overlay.open { display: block; }
+    .modal-box {
+      background: var(--white); border-radius: 12px;
+      max-width: 760px; width: 100%; padding: 48px 52px;
+      position: relative; margin: 0 auto;
+    }
+    .modal-close {
+      position: absolute; top: 18px; right: 20px;
+      background: var(--cream-dark); border: 1px solid var(--border-dark);
+      border-radius: 4px; width: 32px; height: 32px;
+      font-size: 18px; color: var(--gray); cursor: pointer;
+      display: flex; align-items: center; justify-content: center; line-height: 1;
+    }
+    .modal-close:hover { color: var(--dark); background: var(--cream-darker); }
+    .modal-box h1 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--dark); margin-bottom: 4px; padding-right: 40px; }
+    .modal-date { display: block; font-size: 12px; color: var(--gray-light); margin-bottom: 28px; }
+    .modal-box h2 { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--dark); margin-top: 26px; margin-bottom: 8px; }
+    .modal-box p { font-size: 14px; color: var(--gray); line-height: 1.85; margin-bottom: 10px; }
+    .modal-box ul { padding-left: 18px; margin-bottom: 12px; }
+    .modal-box ul li { font-size: 14px; color: var(--gray); line-height: 1.85; margin-bottom: 4px; }
+    .modal-box strong { color: var(--dark2); }
+    .modal-box a { color: var(--gold); text-decoration: underline; }
+    .modal-placeholder { background: rgba(201,168,76,0.12); border: 1px dashed rgba(201,168,76,0.5); border-radius: 4px; padding: 10px 14px; font-size: 13px; color: var(--gold); margin-bottom: 20px; }
+
+    /* ===== FOOTER LEGAL ===== */
+    .footer-legal {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; flex-wrap: wrap;
+      margin-top: 14px; padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .footer-legal a { font-size: 12px; color: rgba(255,255,255,0.28); transition: color 0.2s; }
+    .footer-legal a:hover { color: rgba(255,255,255,0.6); }
+    .footer-legal span { color: rgba(255,255,255,0.12); font-size: 12px; }
+    .footer-powered { font-size: 12px; color: rgba(255,255,255,0.22); text-align: center; margin-top: 10px; }
+    .footer-powered strong { color: rgba(255,255,255,0.38); }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
       .steps { grid-template-columns: 1fr; gap: 32px; }
@@ -805,8 +848,182 @@
       <div class="footer-brand">Hora<span>ia</span></div>
       <p>&copy; 2025 Horaia &middot; Todos los derechos reservados</p>
     </div>
+    <div class="footer-legal">
+      <a href="#" onclick="openModal('modal-aviso');return false;">Aviso Legal</a>
+      <span>&middot;</span>
+      <a href="#" onclick="openModal('modal-privacidad');return false;">Pol&iacute;tica de Privacidad</a>
+      <span>&middot;</span>
+      <a href="#" onclick="openModal('modal-cookies');return false;">Pol&iacute;tica de Cookies</a>
+      <span>&middot;</span>
+      <a href="#" onclick="openModal('modal-terminos');return false;">T&eacute;rminos y Condiciones</a>
+    </div>
+    <p class="footer-powered">Powered by <strong>MV Automatizaciones</strong></p>
   </div>
 </footer>
+
+<!-- MODAL: AVISO LEGAL -->
+<div class="modal-overlay" id="modal-aviso" onclick="closeModalOutside(event,'modal-aviso')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-aviso')">&times;</button>
+    <h1>Aviso Legal</h1>
+    <span class="modal-date">Última actualización: mayo de 2025</span>
+
+    <h2>1. Datos identificativos del responsable</h2>
+    <p>En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y del Comercio Electrónico (LSSI-CE), se facilitan los siguientes datos:</p>
+    <ul>
+      <li><strong>Titular:</strong> MV Automatizaciones</li>
+      <li><strong>NIF/DNI:</strong> 39495615S</li>
+      <li><strong>Domicilio:</strong> Barcelona, España</li>
+      <li><strong>Correo electrónico:</strong> <a href="mailto:mive.pintart@gmail.com">mive.pintart@gmail.com</a></li>
+      <li><strong>Actividad:</strong> Desarrollo y explotación de plataformas digitales de gestión de reservas</li>
+    </ul>
+
+    <h2>2. Objeto y ámbito de aplicación</h2>
+    <p>El presente Aviso Legal regula el acceso y uso del sitio web <strong>Horaia</strong>, propiedad de MV Automatizaciones. El mero acceso implica la aceptación de los presentes términos.</p>
+
+    <h2>3. Propiedad intelectual e industrial</h2>
+    <p>Todos los contenidos del sitio web —textos, imágenes, logotipos, diseño gráfico y código fuente— son propiedad de MV Automatizaciones o de sus licenciantes, y están protegidos por la legislación española e internacional sobre propiedad intelectual e industrial. Queda expresamente prohibida su reproducción, distribución o comunicación pública sin autorización escrita previa.</p>
+
+    <h2>4. Responsabilidad</h2>
+    <p>MV Automatizaciones no garantiza la disponibilidad ininterrumpida del sitio web y se reserva el derecho de modificar, suspender o interrumpir su contenido sin previo aviso. No será responsable de los daños que pudieran derivarse del uso del sitio web o de la imposibilidad temporal de acceder a él.</p>
+
+    <h2>5. Legislación aplicable y jurisdicción</h2>
+    <p>Este Aviso Legal se rige por la legislación española. Para cualquier controversia derivada del acceso o uso del sitio web, las partes se someten a la jurisdicción de los juzgados y tribunales del domicilio del titular, con renuncia expresa a cualquier otro fuero que pudiera corresponderles.</p>
+
+    <div style="margin-top:32px;text-align:right;">
+      <button onclick="closeModal('modal-aviso')" class="btn btn-dark">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: POLÍTICA DE PRIVACIDAD -->
+<div class="modal-overlay" id="modal-privacidad" onclick="closeModalOutside(event,'modal-privacidad')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-privacidad')">&times;</button>
+    <h1>Política de Privacidad</h1>
+    <span class="modal-date">Última actualización: mayo de 2025</span>
+
+    <h2>1. Responsable del tratamiento</h2>
+    <ul>
+      <li><strong>Identidad:</strong> MV Automatizaciones</li>
+      <li><strong>NIF:</strong> 39495615S</li>
+      <li><strong>Dirección:</strong> Barcelona, España</li>
+      <li><strong>Contacto:</strong> <a href="mailto:mive.pintart@gmail.com">mive.pintart@gmail.com</a></li>
+    </ul>
+
+    <h2>2. Datos que recogemos y finalidad</h2>
+    <p>Cuando el usuario contacta con nosotros a través de WhatsApp u otros medios, podemos tratar los siguientes datos personales:</p>
+    <ul>
+      <li><strong>Nombre y nombre del negocio:</strong> para personalizar la comunicación y configurar el servicio.</li>
+      <li><strong>Número de teléfono:</strong> para gestionar la solicitud de información o la relación contractual.</li>
+      <li><strong>Datos de uso del servicio:</strong> citas, horarios y preferencias facilitadas para prestar el servicio contratado.</li>
+    </ul>
+    <p><strong>Finalidades:</strong> atender solicitudes de información, gestionar la relación contractual y, con consentimiento expreso, enviar comunicaciones comerciales sobre Horaia.</p>
+
+    <h2>3. Legitimación del tratamiento</h2>
+    <ul>
+      <li>Ejecución del contrato o aplicación de medidas precontractuales (art. 6.1.b RGPD).</li>
+      <li>Interés legítimo en responder a consultas comerciales (art. 6.1.f RGPD).</li>
+      <li>Consentimiento del interesado para el envío de comunicaciones comerciales (art. 6.1.a RGPD).</li>
+    </ul>
+
+    <h2>4. Conservación de los datos</h2>
+    <p>Los datos se conservarán mientras exista la relación contractual o comercial activa. Una vez finalizada, se mantendrán durante los plazos legalmente previstos para atender posibles responsabilidades (con carácter general, 5 años).</p>
+
+    <h2>5. Destinatarios</h2>
+    <p>Los datos no se cederán a terceros, salvo obligación legal. Podemos utilizar proveedores de servicios (hosting, mensajería) que actúan como encargados del tratamiento bajo contrato y con las garantías exigidas por el RGPD.</p>
+
+    <h2>6. Tus derechos</h2>
+    <p>Puedes ejercer en cualquier momento los derechos de <strong>acceso, rectificación, supresión, portabilidad, oposición y limitación del tratamiento</strong> escribiendo a <a href="mailto:mive.pintart@gmail.com">mive.pintart@gmail.com</a>, indicando el derecho que deseas ejercer y adjuntando copia de tu DNI.</p>
+    <p>También tienes derecho a presentar una reclamación ante la Agencia Española de Protección de Datos: <a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>.</p>
+
+    <div style="margin-top:32px;text-align:right;">
+      <button onclick="closeModal('modal-privacidad')" class="btn btn-dark">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: POLÍTICA DE COOKIES -->
+<div class="modal-overlay" id="modal-cookies" onclick="closeModalOutside(event,'modal-cookies')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-cookies')">&times;</button>
+    <h1>Política de Cookies</h1>
+    <span class="modal-date">Última actualización: mayo de 2025</span>
+
+    <h2>1. ¿Qué son las cookies?</h2>
+    <p>Las cookies son pequeños archivos de texto que los sitios web almacenan en el navegador del usuario para recordar preferencias y mejorar la experiencia de navegación.</p>
+
+    <h2>2. Cookies que utiliza este sitio web</h2>
+    <p>Este sitio web <strong>no utiliza cookies propias ni cookies de análisis o publicidad</strong>. No obstante, carga recursos externos que pueden generar registros de acceso:</p>
+    <ul>
+      <li><strong>Google Fonts</strong> (fonts.googleapis.com / fonts.gstatic.com): servicio de tipografías de Google LLC. Al cargar las fuentes, Google puede registrar la dirección IP y datos técnicos del dispositivo. Consulta la <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">política de privacidad de Google</a>.</li>
+    </ul>
+    <p>Si en el futuro se incorporasen herramientas de análisis (como Google Analytics) o publicidad, esta política se actualizará y se solicitará el consentimiento correspondiente.</p>
+
+    <h2>3. Cómo gestionar o bloquear cookies</h2>
+    <p>Puedes configurar tu navegador para bloquear o eliminar cookies. Ten en cuenta que bloquear ciertos recursos externos puede afectar al aspecto visual del sitio:</p>
+    <ul>
+      <li><strong>Chrome:</strong> Configuración › Privacidad y seguridad › Cookies y otros datos de sitios</li>
+      <li><strong>Firefox:</strong> Opciones › Privacidad y seguridad › Cookies y datos del sitio</li>
+      <li><strong>Safari:</strong> Preferencias › Privacidad › Gestionar datos de sitios web</li>
+      <li><strong>Edge:</strong> Configuración › Privacidad, búsqueda y servicios › Cookies</li>
+    </ul>
+
+    <div style="margin-top:32px;text-align:right;">
+      <button onclick="closeModal('modal-cookies')" class="btn btn-dark">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: TÉRMINOS Y CONDICIONES -->
+<div class="modal-overlay" id="modal-terminos" onclick="closeModalOutside(event,'modal-terminos')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-terminos')">&times;</button>
+    <h1>Términos y Condiciones</h1>
+    <span class="modal-date">Última actualización: mayo de 2025</span>
+
+    <h2>1. Objeto</h2>
+    <p>Los presentes Términos regulan la contratación del servicio <strong>Horaia</strong>, plataforma de gestión de reservas online y página web profesional, prestado por MV Automatizaciones ([NOMBRE Y APELLIDOS], NIF 39495615S) — en adelante, "el Prestador" — a profesionales y negocios — en adelante, "el Cliente".</p>
+
+    <h2>2. Descripción del servicio</h2>
+    <p>Horaia ofrece los siguientes planes de servicio:</p>
+    <ul>
+      <li><strong>Solo Reservas (30 €/mes):</strong> página de reservas con marca del Cliente y panel de gestión de citas.</li>
+      <li><strong>Web + Reservas (60 €/mes):</strong> página web profesional completa, reservas integradas, dominio propio y diseño personalizado.</li>
+    </ul>
+    <p>Están disponibles extras opcionales (recordatorios por WhatsApp, chat en web, pagos online) con precio indicado en la página de precios. Los precios no incluyen IVA salvo indicación expresa.</p>
+
+    <h2>3. Contratación y pago</h2>
+    <p>La contratación se formaliza mediante acuerdo expreso entre el Cliente y el Prestador, habitualmente por WhatsApp o correo electrónico. El pago se realizará por adelantado, mensualmente (o en su caso anualmente), mediante el método acordado. El primer mes podrá ofrecerse sin coste como período de prueba, según las condiciones comunicadas al Cliente en el momento de la contratación.</p>
+
+    <h2>4. Duración y cancelación</h2>
+    <p>El servicio se presta por períodos mensuales renovados automáticamente. El Cliente puede cancelar en cualquier momento comunicándolo al Prestador con al menos <strong>5 días naturales de antelación</strong> al inicio del siguiente período de facturación. No se realizarán cargos tras la cancelación efectiva. En planes anuales, la cancelación anticipada no dará derecho a devolución del importe ya abonado, salvo acuerdo expreso.</p>
+
+    <h2>5. Obligaciones del Cliente</h2>
+    <ul>
+      <li>Facilitar información veraz y actualizada para la configuración del servicio.</li>
+      <li>No utilizar el servicio para actividades ilegales o contrarias al orden público.</li>
+      <li>Abonar el precio acordado en los plazos establecidos.</li>
+      <li>Cumplir con la normativa de protección de datos aplicable en relación con sus propios clientes.</li>
+    </ul>
+
+    <h2>6. Propiedad de los datos</h2>
+    <p>Los datos de clientes y reservas generados a través del servicio son propiedad exclusiva del Cliente. En caso de cancelación, el Prestador entregará dichos datos en formato estándar (CSV o equivalente) a petición del Cliente, sin coste adicional.</p>
+
+    <h2>7. Limitación de responsabilidad</h2>
+    <p>El Prestador no será responsable de interrupciones del servicio causadas por fuerza mayor, fallos de terceros proveedores (hosting, mensajería, pasarelas de pago) o actos del propio Cliente. La responsabilidad máxima del Prestador en ningún caso superará el importe abonado en el último mes de servicio.</p>
+
+    <h2>8. Modificaciones de los términos</h2>
+    <p>El Prestador podrá modificar estos Términos con un preaviso mínimo de 30 días. Si el Cliente no está de acuerdo con las modificaciones, podrá resolver el contrato sin penalización antes de la entrada en vigor de los nuevos términos.</p>
+
+    <h2>9. Legislación aplicable y jurisdicción</h2>
+    <p>Estos Términos se rigen por la legislación española. Para cualquier controversia, las partes se someten a los juzgados y tribunales del domicilio del Prestador, con renuncia expresa a cualquier otro fuero que pudiera corresponderles.</p>
+
+    <div style="margin-top:32px;text-align:right;">
+      <button onclick="closeModal('modal-terminos')" class="btn btn-dark">Cerrar</button>
+    </div>
+  </div>
+</div>
 
 <script>
   document.querySelectorAll('.faq-q').forEach(function(btn) {
@@ -816,6 +1033,26 @@
       document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
       if (!isOpen) item.classList.add('open');
     });
+  });
+
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function closeModalOutside(e, id) {
+    if (e.target === document.getElementById(id)) closeModal(id);
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.open').forEach(function(m) {
+        m.classList.remove('open');
+      });
+      document.body.style.overflow = '';
+    }
   });
 
   function toggleBilling(isAnnual) {

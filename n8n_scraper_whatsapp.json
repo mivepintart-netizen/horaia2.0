@@ -1,0 +1,382 @@
+{
+  "name": "Horaia — Scraper Barberías + WhatsApp",
+  "nodes": [
+
+    {
+      "parameters": {},
+      "id": "n001",
+      "name": "▶ 1. Iniciar Scraping",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [200, 200]
+    },
+
+    {
+      "parameters": {
+        "jsCode": "return [\n  { json: { query: 'barbería Barcelona' } },\n  { json: { query: 'barber shop Barcelona' } },\n  { json: { query: 'barbería hombre Barcelona Eixample' } },\n  { json: { query: 'barbería hombre Barcelona Gracia' } },\n  { json: { query: 'barbería hombre Barcelona Poblenou' } }\n];"
+      },
+      "id": "n002",
+      "name": "Definir búsquedas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 200]
+    },
+
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://maps.googleapis.com/maps/api/place/textsearch/json",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "query",    "value": "={{ $json.query }}" },
+            { "name": "language", "value": "es" },
+            { "name": "region",   "value": "ES" },
+            { "name": "key",      "value": "REEMPLAZA_CON_TU_API_KEY_GOOGLE" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "n003",
+      "name": "Google Places — Text Search",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [640, 200]
+    },
+
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\nconst results = response.results || [];\nif (!results.length) return [];\nreturn results.map(r => ({\n  json: {\n    place_id:       r.place_id,\n    nombre_prev:    r.name || '',\n    direccion_prev: r.formatted_address || '',\n    rating_prev:    r.rating || '',\n    resenas_prev:   r.user_ratings_total || 0\n  }\n}));"
+      },
+      "id": "n004",
+      "name": "Extraer place_ids",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [860, 200]
+    },
+
+    {
+      "parameters": { "batchSize": 1, "options": {} },
+      "id": "n005",
+      "name": "Loop — Un negocio a la vez",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [1080, 200]
+    },
+
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://maps.googleapis.com/maps/api/place/details/json",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "place_id", "value": "={{ $json.place_id }}" },
+            { "name": "fields",   "value": "name,formatted_phone_number,formatted_address,rating,user_ratings_total,website" },
+            { "name": "language", "value": "es" },
+            { "name": "key",      "value": "REEMPLAZA_CON_TU_API_KEY_GOOGLE" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "n006",
+      "name": "Google Places — Detalles + Teléfono",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1300, 200]
+    },
+
+    {
+      "parameters": {
+        "jsCode": "const detail = $input.first().json.result || {};\nconst prev   = $('Loop — Un negocio a la vez').first().json;\n\nconst telefono = (detail.formatted_phone_number || '').trim();\nlet telWA = telefono.replace(/[\\s\\+\\-\\.\\(\\)]/g, '');\nif (telWA && !telWA.startsWith('34')) {\n  if (/^[679]/.test(telWA)) telWA = '34' + telWA;\n}\n\nconst web = (detail.website || '').toLowerCase();\n\n// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n// CLASIFICACIÓN: detecta si usa Booksy o Treatwell\n// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nlet categoria = 'sin_sistema';\nif (web.includes('booksy.com'))     categoria = 'booksy';\nelse if (web.includes('treatwell')) categoria = 'treatwell';\n\nreturn [{\n  json: {\n    Nombre:      detail.name || prev.nombre_prev || '',\n    Telefono:    telefono,\n    Telefono_WA: telWA,\n    Direccion:   detail.formatted_address || prev.direccion_prev || '',\n    Rating:      detail.rating || prev.rating_prev || '',\n    Resenas:     detail.user_ratings_total || prev.resenas_prev || 0,\n    Web:         detail.website || '',\n    Categoria:   categoria,\n    Estado:      'pendiente',\n    Fecha_Alta:  new Date().toISOString().split('T')[0],\n    Fecha_Envio: ''\n  }\n}];"
+      },
+      "id": "n007",
+      "name": "Formatear y clasificar lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1520, 200]
+    },
+
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "cond-phone",
+              "leftValue": "={{ $json.Telefono_WA }}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "notEmpty" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "n008",
+      "name": "¿Tiene teléfono?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1740, 200]
+    },
+
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": { "__rl": true, "value": "REEMPLAZA_CON_TU_SPREADSHEET_ID", "mode": "id" },
+        "sheetName":  { "__rl": true, "value": "Leads", "mode": "name" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre":      "={{ $json.Nombre }}",
+            "Telefono":    "={{ $json.Telefono }}",
+            "Telefono_WA": "={{ $json.Telefono_WA }}",
+            "Direccion":   "={{ $json.Direccion }}",
+            "Rating":      "={{ $json.Rating }}",
+            "Resenas":     "={{ $json.Resenas }}",
+            "Web":         "={{ $json.Web }}",
+            "Categoria":   "={{ $json.Categoria }}",
+            "Estado":      "={{ $json.Estado }}",
+            "Fecha_Alta":  "={{ $json.Fecha_Alta }}",
+            "Fecha_Envio": ""
+          }
+        },
+        "options": { "skipEmptyValueRows": true }
+      },
+      "id": "n009",
+      "name": "Sheets — Guardar lead",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1960, 140]
+    },
+
+
+    {
+      "parameters": {},
+      "id": "n010",
+      "name": "▶ 2. Iniciar envío WhatsApp",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [200, 600]
+    },
+
+    {
+      "parameters": {
+        "operation": "getAll",
+        "documentId": { "__rl": true, "value": "REEMPLAZA_CON_TU_SPREADSHEET_ID", "mode": "id" },
+        "sheetName":  { "__rl": true, "value": "Leads", "mode": "name" },
+        "options":    { "returnAllMatches": true }
+      },
+      "id": "n011",
+      "name": "Sheets — Leer todos los leads",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [420, 600]
+    },
+
+    {
+      "parameters": {
+        "jsCode": "const pendientes = $input.all()\n  .map(i => i.json)\n  .filter(r => r.Estado === 'pendiente' && r.Telefono_WA && r.Telefono_WA.length > 8);\n\nconst hoy = pendientes.slice(0, 30);\n\nif (!hoy.length) {\n  throw new Error('No hay leads pendientes con teléfono.');\n}\n\nreturn hoy.map(r => ({ json: r }));"
+      },
+      "id": "n012",
+      "name": "Filtrar pendientes (máx 30)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [640, 600]
+    },
+
+    {
+      "parameters": { "batchSize": 1, "options": {} },
+      "id": "n013",
+      "name": "Loop — Un mensaje a la vez",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [860, 600]
+    },
+
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "cond-categoria",
+              "leftValue": "={{ $json.Categoria }}",
+              "rightValue": "sin_sistema",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "n013b",
+      "name": "¿Con plataforma o sin sistema?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1080, 600]
+    },
+
+    {
+      "parameters": {
+        "jsCode": "const lead = $input.first().json;\nconst nombre = lead.Nombre || 'equipo';\nconst plataforma = lead.Categoria === 'booksy' ? 'Booksy' : 'Treatwell';\n\n// ━━ MENSAJE PARA LOS QUE USAN BOOKSY O TREATWELL ━━\nconst mensaje = `Hola! Soy Marcos 👋\n\nVi que *${nombre}* usa ${plataforma} y quería comentaros algo.\n\nTras las muchas quejas que recibimos sobre sus precios, creamos *Horaia* — para que las barberías no sigan perdiendo dinero mes tras mes.\n\n¿Lo habéis calculado alguna vez cuánto os cuesta al año?\n\nPodéis probarlo un mes sin compromiso. ¿Os cuento cómo funciona?`;\n\nreturn [{ json: { ...lead, mensaje_wa: mensaje } }];"
+      },
+      "id": "n014a",
+      "name": "Mensaje — Con plataforma",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1300, 500]
+    },
+
+    {
+      "parameters": {
+        "jsCode": "const lead = $input.first().json;\nconst nombre = lead.Nombre || 'equipo';\n\n// ━━ MENSAJE PARA LOS QUE NO TIENEN SISTEMA ━━\nconst mensaje = `Hola! Soy Marcos 👋\n\nVi *${nombre}* en Google y quería preguntaros cómo gestionáis las citas. ¿Lo hacéis por WhatsApp o teléfono?\n\nEstoy montando algo para que los clientes puedan reservar solos sin tener que llamar ni escribir.\n\nPodéis probarlo un mes sin compromiso. ¿Os cuento cómo funciona?`;\n\nreturn [{ json: { ...lead, mensaje_wa: mensaje } }];"
+      },
+      "id": "n014b",
+      "name": "Mensaje — Sin sistema",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1300, 700]
+    },
+
+    {
+      "parameters": {
+        "unit": "seconds",
+        "amount": 45
+      },
+      "id": "n015",
+      "name": "Esperar 45s entre mensajes",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [1520, 600],
+      "webhookId": "wait-whatsapp-horaia"
+    },
+
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.ultramsg.com/REEMPLAZA_CON_TU_INSTANCE_ID/messages/chat",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/x-www-form-urlencoded" }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "token", "value": "REEMPLAZA_CON_TU_TOKEN_ULTRAMSG" },
+            { "name": "to",    "value": "={{ $json.Telefono_WA }}" },
+            { "name": "body",  "value": "={{ $json.mensaje_wa }}" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "n016",
+      "name": "UltraMsg — Enviar WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1740, 600]
+    },
+
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": { "__rl": true, "value": "REEMPLAZA_CON_TU_SPREADSHEET_ID", "mode": "id" },
+        "sheetName":  { "__rl": true, "value": "Leads", "mode": "name" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Estado":      "enviado",
+            "Fecha_Envio": "={{ new Date().toISOString().split('T')[0] }}"
+          }
+        },
+        "matchingColumns": ["Telefono_WA"],
+        "options": {}
+      },
+      "id": "n017",
+      "name": "Sheets — Marcar como enviado",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1960, 600]
+    }
+
+  ],
+
+  "connections": {
+    "▶ 1. Iniciar Scraping": {
+      "main": [[{ "node": "Definir búsquedas", "type": "main", "index": 0 }]]
+    },
+    "Definir búsquedas": {
+      "main": [[{ "node": "Google Places — Text Search", "type": "main", "index": 0 }]]
+    },
+    "Google Places — Text Search": {
+      "main": [[{ "node": "Extraer place_ids", "type": "main", "index": 0 }]]
+    },
+    "Extraer place_ids": {
+      "main": [[{ "node": "Loop — Un negocio a la vez", "type": "main", "index": 0 }]]
+    },
+    "Loop — Un negocio a la vez": {
+      "main": [
+        [{ "node": "Google Places — Detalles + Teléfono", "type": "main", "index": 0 }],
+        []
+      ]
+    },
+    "Google Places — Detalles + Teléfono": {
+      "main": [[{ "node": "Formatear y clasificar lead", "type": "main", "index": 0 }]]
+    },
+    "Formatear y clasificar lead": {
+      "main": [[{ "node": "¿Tiene teléfono?", "type": "main", "index": 0 }]]
+    },
+    "¿Tiene teléfono?": {
+      "main": [
+        [{ "node": "Sheets — Guardar lead",         "type": "main", "index": 0 }],
+        [{ "node": "Loop — Un negocio a la vez",     "type": "main", "index": 0 }]
+      ]
+    },
+    "Sheets — Guardar lead": {
+      "main": [[{ "node": "Loop — Un negocio a la vez", "type": "main", "index": 0 }]]
+    },
+
+    "▶ 2. Iniciar envío WhatsApp": {
+      "main": [[{ "node": "Sheets — Leer todos los leads", "type": "main", "index": 0 }]]
+    },
+    "Sheets — Leer todos los leads": {
+      "main": [[{ "node": "Filtrar pendientes (máx 30)", "type": "main", "index": 0 }]]
+    },
+    "Filtrar pendientes (máx 30)": {
+      "main": [[{ "node": "Loop — Un mensaje a la vez", "type": "main", "index": 0 }]]
+    },
+    "Loop — Un mensaje a la vez": {
+      "main": [
+        [{ "node": "¿Con plataforma o sin sistema?", "type": "main", "index": 0 }],
+        []
+      ]
+    },
+    "¿Con plataforma o sin sistema?": {
+      "main": [
+        [{ "node": "Mensaje — Sin sistema",    "type": "main", "index": 0 }],
+        [{ "node": "Mensaje — Con plataforma", "type": "main", "index": 0 }]
+      ]
+    },
+    "Mensaje — Con plataforma": {
+      "main": [[{ "node": "Esperar 45s entre mensajes", "type": "main", "index": 0 }]]
+    },
+    "Mensaje — Sin sistema": {
+      "main": [[{ "node": "Esperar 45s entre mensajes", "type": "main", "index": 0 }]]
+    },
+    "Esperar 45s entre mensajes": {
+      "main": [[{ "node": "UltraMsg — Enviar WhatsApp", "type": "main", "index": 0 }]]
+    },
+    "UltraMsg — Enviar WhatsApp": {
+      "main": [[{ "node": "Sheets — Marcar como enviado", "type": "main", "index": 0 }]]
+    },
+    "Sheets — Marcar como enviado": {
+      "main": [[{ "node": "Loop — Un mensaje a la vez", "type": "main", "index": 0 }]]
+    }
+  },
+
+  "active": false,
+  "settings": { "executionOrder": "v1" }
+}
